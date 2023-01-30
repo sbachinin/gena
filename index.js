@@ -5,13 +5,13 @@ const get_random_point = () => ([
     Math.random() * canvas.height
 ])
 
-const get_rand_color = () => {
+const get_rand_color = (min = 0, max = 255) => {
     return 'rgb('
-        + Math.random() * 255
+        + min + Math.random() * (max - min)
         + ','
-        + Math.random() * 255
+        + min + Math.random() * (max - min)
         + ','
-        + Math.random() * 255
+        + min + Math.random() * (max - min)
         + ')'
 }
 
@@ -29,12 +29,14 @@ const get_rand_color = () => {
 
 
 
-const w = 900, h = 1200
+const w = 1300, h = 1700
+
+const border_width = 120
 
 
 const canvas = document.querySelector('canvas')
-canvas.width = w + 400
-canvas.height = h + 500
+canvas.width = w
+canvas.height = h
 const ctx = canvas.getContext('2d')
 
 ctx.fillStyle = get_rand_color()
@@ -83,5 +85,5 @@ ctx.stroke()
 
 
 ctx.strokeStyle = get_rand_color()
-ctx.lineWidth = 200
+ctx.lineWidth = border_width
 ctx.strokeRect(0, 0, canvas.width, canvas.height)
