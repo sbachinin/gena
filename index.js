@@ -27,7 +27,15 @@ document.body
         if (e.target === document.querySelector('canvas.current')) {
             e.target.classList.remove('current')
             draw_next_canvas()
-            setTimeout(() => e.target.remove(), 500)
+            setTimeout(
+                () => {
+                    !e.target.classList.contains('saved') && e.target.remove()
+                },
+                500
+            )
+        } else if (e.target === document.querySelector('.keep')) {
+            document.querySelector('canvas.current')
+                .classList.add('saved')
         }
     })
 
