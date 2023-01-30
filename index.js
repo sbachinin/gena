@@ -24,18 +24,26 @@ const get_rand_color = (min = 0, max = 255) => {
 
 document.body
     .addEventListener('click', e => {
-        if (e.target === document.querySelector('canvas.current')) {
+        const current_canvas = document.querySelector('canvas.current')
+        const keep = document.querySelector('.keep')
+        if (e.target === current_canvas) {
             e.target.classList.remove('current')
             draw_next_canvas()
+            keep.classList.remove('selected')
             setTimeout(
                 () => {
                     !e.target.classList.contains('saved') && e.target.remove()
                 },
                 500
             )
-        } else if (e.target === document.querySelector('.keep')) {
-            document.querySelector('canvas.current')
-                .classList.add('saved')
+        } else if (e.target === keep) {
+            if (!current_canvas.classList.contains('saved')) {
+                current_canvas.classList.add('saved')
+                keep.classList.add('selected')
+            } else {
+                current_canvas.classList.remove('saved')
+                keep.classList.remove('selected')
+            }
         }
     })
 
