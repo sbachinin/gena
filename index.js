@@ -40,20 +40,15 @@ const get_narrow_random_point = () => {
     ]
 }
 
-let curr_point = get_narrow_random_point()
-let counter = 0
-setInterval(() => {
-    ctx.beginPath()
-    ctx.moveTo(...curr_point)
-    if (counter > 100) return
-    ctx.strokeStyle = 'green'
-    ctx.lineWidth = 2
-    const [x, y] = get_random_point()
-    curr_point = get_narrow_random_point()
-    ctx.lineTo(...curr_point)
-    ctx.stroke()
-    counter++
-}, 10)
+ctx.beginPath()
+ctx.strokeStyle = 'green'
+ctx.lineWidth = 2
+ctx.moveTo(...get_narrow_random_point())
+for (let i=0; i<100; i++) {
+    ctx.lineTo(...get_narrow_random_point())
+}
+ctx.stroke()
+
 
 
 ctx.strokeStyle = '#193d5f'
