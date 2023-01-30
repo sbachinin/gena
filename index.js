@@ -34,7 +34,7 @@ document.body
                 () => {
                     !e.target.classList.contains('saved') && e.target.remove()
                 },
-                500
+                350
             )
         } else if (e.target === keep) {
             if (!current_canvas.classList.contains('saved')) {
@@ -44,6 +44,16 @@ document.body
                 current_canvas.classList.remove('saved')
                 keep.classList.remove('selected')
             }
+        } else if (e.target.closest('.left')) {
+            document.querySelector('canvas.saved:not(.current)').classList.add('current')
+            keep.classList.add('selected')
+            setTimeout(
+                () => {
+                    current_canvas.classList.remove('current')
+                    !current_canvas.classList.contains('saved') && current_canvas.remove()
+                },
+                350
+            )
         }
     })
 
