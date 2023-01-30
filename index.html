@@ -1,11 +1,18 @@
 <style>
-    body {
-        /* background: #193d5f; */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    canvas {
+        cursor: pointer;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+        pointer-events: none;
+    }
+    canvas.current {
+        opacity: 1;
+        pointer-events: auto;
     }
 </style>
-<canvas></canvas>
-
+<body></body>
 <script src="./index.js"></script>
