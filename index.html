@@ -1,12 +1,14 @@
 <style>
     body {
         background: #8d8d8d;
+        margin: 0;
     }
 
     .controls {
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 50px;
     }
 
     .controls>span {
@@ -35,8 +37,17 @@
         fill: white;
     }
 
+
+    .create.nav-button {
+        margin-left: 20px;
+    }
+    .create.nav-button svg {
+        height: 24px;
+        width: 24px;
+    }
+
     .keep {
-        margin-left: 15px;
+        margin-left: 20px;
         display: flex;
         color: white;
     }
@@ -96,6 +107,10 @@
                 <path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" />
             </svg>
             Keep
+        </span>
+
+        <span class="create nav-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/></svg>
         </span>
     </div>
 </body>
