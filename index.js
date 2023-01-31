@@ -20,41 +20,62 @@ const get_rand_color = (min = 0, max = 255) => {
 }
 
 //////////////////////////////////////////////////////
-// INTERACTION
+
+const state = {
+    ids: {}, // [id]: boolean (saved or not)
+    current_id: null
+}
+
+const update_view = () => {
+    document.querySelectorAll('canvas').forEach(c => {
+        c.classList.remove('current')
+        if (state.ids[c.id.replace('canvas', '')] === true) {
+            c.classList.add('saved')
+        } else {
+            c.classList.remove('saved')
+        }
+    })
+
+    document.querySelector(`#canvas${state.current_id}`).classList.add('current')
+
+    document.querySelectorAll('canvas:not(.current):not(.saved)').forEach(c => c.remove())
+
+    if (state.ids[state.current_id] === false) {
+        document.querySelector('.keep').classList.remove('selected')
+    } else {
+        document.querySelector('.keep').classList.add('selected')
+    }
+
+    const prev_saved_ids = Object.keys(state.ids)
+        .filter(id => id < state.current_id && Boolean(state.ids[id]))
+    if (prev_saved_ids.length) {
+        document.querySelector('.left').classList.add('active')
+    } else {
+        document.querySelector('.left').classList.remove('active')
+    }
+}
 
 document.body
     .addEventListener('click', e => {
         const current_canvas = document.querySelector('canvas.current')
         const keep = document.querySelector('.keep')
         if (e.target === current_canvas) {
-            e.target.classList.remove('current')
-            draw_next_canvas()
-            keep.classList.remove('selected')
-            setTimeout(
-                () => {
-                    !e.target.classList.contains('saved') && e.target.remove()
-                },
-                350
-            )
+            create_next_canvas()
+
         } else if (e.target === keep) {
-            if (!current_canvas.classList.contains('saved')) {
-                current_canvas.classList.add('saved')
-                keep.classList.add('selected')
-            } else {
-                current_canvas.classList.remove('saved')
-                keep.classList.remove('selected')
+            state.ids[state.current_id] = !state.ids[state.current_id]
+
+        } else if (e.target.closest('.left.active')) {
+            const prev_saved_ids = Object.keys(state.ids)
+                .filter(id => id < state.current_id && Boolean(state.ids[id]))
+            if (prev_saved_ids.length) {
+                state.current_id = Math.max(...prev_saved_ids)
             }
-        } else if (e.target.closest('.left')) {
-            document.querySelector('canvas.saved:not(.current)').classList.add('current')
-            keep.classList.add('selected')
-            setTimeout(
-                () => {
-                    current_canvas.classList.remove('current')
-                    !current_canvas.classList.contains('saved') && current_canvas.remove()
-                },
-                350
-            )
+        } else {
+            return
         }
+        console.log(JSON.stringify(state, null, 2))
+        update_view()
     })
 
 
@@ -68,10 +89,11 @@ document.body
 
 
 ////////////////////////////////////////////////////////
-
-const draw_next_canvas = () => {
+let count = 0
+const create_next_canvas = () => {
     const canvas = document.createElement('canvas')
     canvas.classList.add('current')
+    canvas.id = 'canvas' + count
 
     canvas.width = w
     canvas.height = h
@@ -127,6 +149,10 @@ const draw_next_canvas = () => {
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
 
     document.body.prepend(canvas)
+
+    state.ids[count] = false
+    state.current_id = count
+    count++
 }
 
-draw_next_canvas()
+create_next_canvas()
