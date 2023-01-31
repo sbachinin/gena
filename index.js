@@ -84,6 +84,14 @@ const update_view = async () => {
     } else {
         document.querySelector('.left').classList.remove('active')
     }
+
+    const next_saved_ids = Object.keys(state.ids)
+        .filter(id => id > state.current_opus_id && Boolean(state.ids[id]))
+    if (next_saved_ids.length) {
+        document.querySelector('.right').classList.add('active')
+    } else {
+        document.querySelector('.right').classList.remove('active')
+    }
 }
 
 document.body
@@ -101,6 +109,12 @@ document.body
                 .filter(id => id < state.current_opus_id && Boolean(state.ids[id]))
             if (prev_saved_ids.length) {
                 state.current_opus_id = Math.max(...prev_saved_ids)
+            }
+        } else if (e.target.closest('.right.active')) {
+            const next_saved_ids = Object.keys(state.ids)
+                .filter(id => id > state.current_opus_id && Boolean(state.ids[id]))
+            if (next_saved_ids.length) {
+                state.current_opus_id = Math.min(...next_saved_ids)
             }
         } else {
             return
