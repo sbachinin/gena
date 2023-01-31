@@ -1,6 +1,5 @@
 const w = 1300,
-    h = 1700,
-    border_width = 120
+    h = 1700
 
 const canvas_fading_duration = parseFloat(
     getComputedStyle(document.querySelector('canvas')).transitionDuration
@@ -141,8 +140,8 @@ const create_next_canvas = () => {
         ]
     }
 
-    const bg_thickness = 4000 + Math.random() * 6000
-    const fore_thickness = 10 + Math.random() * 90
+    const bg_thickness = 5000 + Math.random() * 5000
+    const fore_thickness = 7 + Math.random() * 30
 
 
     ctx.strokeStyle = 'rgb(30, 30, 30)'
@@ -166,7 +165,7 @@ const create_next_canvas = () => {
 
     ctx.beginPath()
     ctx.strokeStyle = get_rand_color()
-    ctx.lineWidth = 1 + Math.random() * 9
+    ctx.lineWidth = 1 + Math.random() * 6
     ctx.moveTo(...get_narrow_random_point())
     for (let i = 0; i < fore_thickness; i++) {
         ctx.lineTo(...get_narrow_random_point())
@@ -174,10 +173,11 @@ const create_next_canvas = () => {
     ctx.stroke()
 
 
-
-    ctx.strokeStyle = get_rand_color(0, 150, 0.6)
-    ctx.lineWidth = border_width
-    ctx.strokeRect(0, 0, canvas.width, canvas.height)
+    if (Math.random() > 0.5) {
+        ctx.strokeStyle = get_rand_color(0, 150, 0.7)
+        ctx.lineWidth = 20 + Math.random() * 100
+        ctx.strokeRect(0, 0, canvas.width, canvas.height)
+    }
 
     document.body.prepend(canvas)
 
