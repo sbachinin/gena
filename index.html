@@ -17,16 +17,18 @@
         user-select: none;
     }
 
-    .left {
+    .nav-button {
         opacity: 0.2;
         pointer-events: none;
         transition: opacity 0.3s ease-out;
     }
-    .left.active {
+
+    .nav-button.active {
         opacity: 1;
         pointer-events: auto;
     }
-    .left svg {
+
+    .nav-button svg {
         height: 32px;
         width: 32px;
         display: block;
@@ -73,9 +75,15 @@
     <canvas class="canvas-for-measurements"></canvas>
 
     <div class="controls">
-        <span class="left">
+        <span class="left nav-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
+            </svg>
+        </span>
+
+        <span class="right nav-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
             </svg>
         </span>
 
