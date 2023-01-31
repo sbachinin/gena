@@ -1,4 +1,8 @@
 <style>
+    body {
+        background: #8d8d8d;
+    }
+
     .controls {
         display: flex;
         align-items: center;
@@ -16,6 +20,7 @@
     .left {
         opacity: 0.2;
         pointer-events: none;
+        transition: opacity 0.3s ease-out;
     }
     .left.active {
         opacity: 1;
@@ -25,16 +30,19 @@
         height: 32px;
         width: 32px;
         display: block;
+        fill: white;
     }
 
     .keep {
         margin-left: 15px;
         display: flex;
+        color: white;
     }
 
     .keep svg {
         display: none;
-        margin-left: 5px;
+        margin-right: 8px;
+        fill: white;
     }
 
     .keep.selected .filled-checkbox,
@@ -50,7 +58,7 @@
         top: 50%;
         transform: translate(-50%, -50%);
         opacity: 0;
-        transition: opacity 0.35s ease-out;
+        transition: opacity 0.3s ease-out;
         pointer-events: none;
         max-height: calc(100% - 100px);
     }
@@ -62,8 +70,9 @@
 </style>
 
 <body>
-    <div class="controls">
+    <canvas class="canvas-for-measurements"></canvas>
 
+    <div class="controls">
         <span class="left">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
@@ -71,7 +80,6 @@
         </span>
 
         <span class="keep">
-            Keep
             <svg class="filled-checkbox" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path
                     d="M11 17l-5-5.299 1.399-1.43 3.574 3.736 6.572-7.007 1.455 1.403-8 8.597zm11-15v20h-20v-20h20zm2-2h-24v24h24v-24z" />
@@ -79,6 +87,7 @@
             <svg class="empty-checkbox" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" />
             </svg>
+            Keep
         </span>
     </div>
 </body>

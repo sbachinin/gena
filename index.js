@@ -2,7 +2,23 @@ const w = 1300,
     h = 1700,
     border_width = 120
 
+const canvas_fading_duration = parseFloat(
+    getComputedStyle(document.querySelector('canvas')).transitionDuration
+) * 1000
+
+const wait = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // UTILS
+
+const get_current_canvas_id = () => { // => number or null
+    const current_canvas = document.querySelector('canvas.current')
+    if (current_canvas === null) {
+        return null 
+    }
+    return +current_canvas.id.replace('canvas', '')
+}
 
 const get_random_point = () => ([
     Math.random() * w,
@@ -23,10 +39,20 @@ const get_rand_color = (min = 0, max = 255) => {
 
 const state = {
     ids: {}, // [id]: boolean (saved or not)
-    current_id: null
+    current_opus_id: null
 }
 
-const update_view = () => {
+const update_view = async () => {
+
+    if (state.ids[state.current_opus_id] === false) {
+        document.querySelector('.keep').classList.remove('selected')
+    } else {
+        document.querySelector('.keep').classList.add('selected')
+    }
+
+    // if current didn't change, skip all the rest
+    if (state.current_opus_id === get_current_canvas_id()) return
+
     document.querySelectorAll('canvas').forEach(c => {
         c.classList.remove('current')
         if (state.ids[c.id.replace('canvas', '')] === true) {
@@ -36,18 +62,14 @@ const update_view = () => {
         }
     })
 
-    document.querySelector(`#canvas${state.current_id}`).classList.add('current')
+    await wait(canvas_fading_duration)
+
+    document.querySelector(`#canvas${state.current_opus_id}`).classList.add('current')
 
     document.querySelectorAll('canvas:not(.current):not(.saved)').forEach(c => c.remove())
 
-    if (state.ids[state.current_id] === false) {
-        document.querySelector('.keep').classList.remove('selected')
-    } else {
-        document.querySelector('.keep').classList.add('selected')
-    }
-
     const prev_saved_ids = Object.keys(state.ids)
-        .filter(id => id < state.current_id && Boolean(state.ids[id]))
+        .filter(id => id < state.current_opus_id && Boolean(state.ids[id]))
     if (prev_saved_ids.length) {
         document.querySelector('.left').classList.add('active')
     } else {
@@ -63,13 +85,13 @@ document.body
             create_next_canvas()
 
         } else if (e.target === keep) {
-            state.ids[state.current_id] = !state.ids[state.current_id]
+            state.ids[state.current_opus_id] = !state.ids[state.current_opus_id]
 
         } else if (e.target.closest('.left.active')) {
             const prev_saved_ids = Object.keys(state.ids)
-                .filter(id => id < state.current_id && Boolean(state.ids[id]))
+                .filter(id => id < state.current_opus_id && Boolean(state.ids[id]))
             if (prev_saved_ids.length) {
-                state.current_id = Math.max(...prev_saved_ids)
+                state.current_opus_id = Math.max(...prev_saved_ids)
             }
         } else {
             return
@@ -92,7 +114,6 @@ document.body
 let count = 0
 const create_next_canvas = () => {
     const canvas = document.createElement('canvas')
-    canvas.classList.add('current')
     canvas.id = 'canvas' + count
 
     canvas.width = w
@@ -151,8 +172,9 @@ const create_next_canvas = () => {
     document.body.prepend(canvas)
 
     state.ids[count] = false
-    state.current_id = count
+    state.current_opus_id = count
     count++
 }
 
 create_next_canvas()
+update_view()
