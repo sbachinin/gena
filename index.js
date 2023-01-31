@@ -15,7 +15,7 @@ const wait = (ms) => {
 const get_current_canvas_id = () => { // => number or null
     const current_canvas = document.querySelector('canvas.current')
     if (current_canvas === null) {
-        return null 
+        return null
     }
     return +current_canvas.id.replace('canvas', '')
 }
@@ -25,13 +25,23 @@ const get_random_point = () => ([
     Math.random() * h
 ])
 
-const get_rand_color = (min = 0, max = 255) => {
+const get_rand_color = (min = 0, max = 255, greyness_ratio = 0 /* 0-1 */) => {
+    
+    // apply greyness
+    let random1 = Math.random(),
+        random2 = Math.random(),
+        random3 = Math.random()
+    const avg = (random1 + random2 + random3) / 3
+    random1 = random1 - (random1 - avg) * greyness_ratio
+    random2 = random2 - (random2 - avg) * greyness_ratio
+    random3 = random3 - (random3 - avg) * greyness_ratio
+
     return 'rgb('
-        + min + Math.random() * (max - min)
+        + min + random1 * (max - min)
         + ','
-        + min + Math.random() * (max - min)
+        + min + random2 * (max - min)
         + ','
-        + min + Math.random() * (max - min)
+        + min + random3 * (max - min)
         + ')'
 }
 
@@ -165,7 +175,7 @@ const create_next_canvas = () => {
 
 
 
-    ctx.strokeStyle = get_rand_color()
+    ctx.strokeStyle = get_rand_color(0, 150, 0.6)
     ctx.lineWidth = border_width
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
 
