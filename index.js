@@ -163,6 +163,12 @@ const create_next_canvas = () => {
     ctx.fillStyle = get_rand_color()
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+    if (Math.random() > 0.5) {
+        ctx.strokeStyle = get_rand_color(50, 150, 0.8)
+        ctx.lineWidth = 50 + Math.random() * 70
+        ctx.strokeRect(0, 0, canvas.width, canvas.height)
+    }
+
     const get_wide_random_point = () => {
         const [x, y] = get_random_point()
         return [
@@ -206,13 +212,6 @@ const create_next_canvas = () => {
         ctx.lineTo(...point)
     }
     ctx.stroke()
-
-
-    if (Math.random() > 0.5) {
-        ctx.strokeStyle = get_rand_color(0, 100, 0.8)
-        ctx.lineWidth = 20 + Math.random() * 100
-        ctx.strokeRect(0, 0, canvas.width, canvas.height)
-    }
 
     document.body.prepend(canvas)
 
