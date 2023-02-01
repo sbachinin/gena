@@ -24,8 +24,9 @@ const get_random_point = () => ([
     Math.random() * h
 ])
 
+// providing narrow range btw min and max leads to more greyness
 const get_rand_color = (min = 0, max = 255, greyness_ratio = 0 /* 0-1 */) => {
-    
+
     // apply greyness
     let random1 = Math.random(),
         random2 = Math.random(),
@@ -42,6 +43,20 @@ const get_rand_color = (min = 0, max = 255, greyness_ratio = 0 /* 0-1 */) => {
         + ','
         + (min + random3 * (max - min))
         + ')'
+}
+
+const get_jolly_color = (brightness_ratio = 0.6) => {
+    let random1, random2, random3, avg = 0
+
+    // ensure high avg numbers
+    while (avg < brightness_ratio) {
+        random1 = Math.random()
+        random2 = Math.random()
+        random3 = Math.random()
+        avg = (random1 + random2 + random3) / 3
+    }
+
+    return `rgb(${random1 * 255}, ${random2*255}, ${random3*255})`
 }
 
 //////////////////////////////////////////////////////
@@ -157,7 +172,7 @@ const create_next_canvas = () => {
     }
 
     const bg_thickness = 5000 + Math.random() * 5000
-    const fore_thickness = 7 + Math.random() * 30
+    const fore_thickness = 7 + Math.random() * 20
 
 
     ctx.strokeStyle = 'rgb(30, 30, 30)'
@@ -180,8 +195,8 @@ const create_next_canvas = () => {
 
 
     ctx.beginPath()
-    ctx.strokeStyle = get_rand_color()
-    ctx.lineWidth = 1 + Math.random() * 5
+    ctx.strokeStyle = get_jolly_color()
+    ctx.lineWidth = 2 + Math.random() * 6
     ctx.moveTo(...get_narrow_random_point())
     for (let i = 0; i < fore_thickness; i++) {
         let point = get_narrow_random_point()
