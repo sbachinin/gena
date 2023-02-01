@@ -36,11 +36,11 @@ const get_rand_color = (min = 0, max = 255, greyness_ratio = 0 /* 0-1 */) => {
     random3 = random3 - (random3 - avg) * greyness_ratio
 
     return 'rgb('
-        + min + random1 * (max - min)
+        + (min + random1 * (max - min))
         + ','
-        + min + random2 * (max - min)
+        + (min + random2 * (max - min))
         + ','
-        + min + random3 * (max - min)
+        + (min + random3 * (max - min))
         + ')'
 }
 
@@ -122,7 +122,6 @@ document.body
         } else {
             return
         }
-        console.log(JSON.stringify(state, null, 2))
         update_view()
     })
 
@@ -182,16 +181,20 @@ const create_next_canvas = () => {
 
     ctx.beginPath()
     ctx.strokeStyle = get_rand_color()
-    ctx.lineWidth = 1 + Math.random() * 6
+    ctx.lineWidth = 1 + Math.random() * 5
     ctx.moveTo(...get_narrow_random_point())
     for (let i = 0; i < fore_thickness; i++) {
-        ctx.lineTo(...get_narrow_random_point())
+        let point = get_narrow_random_point()
+        if (Math.random() > 0.95) {
+            point = get_random_point()
+        }
+        ctx.lineTo(...point)
     }
     ctx.stroke()
 
 
     if (Math.random() > 0.5) {
-        ctx.strokeStyle = get_rand_color(0, 150, 0.7)
+        ctx.strokeStyle = get_rand_color(0, 100, 0.8)
         ctx.lineWidth = 20 + Math.random() * 100
         ctx.strokeRect(0, 0, canvas.width, canvas.height)
     }
