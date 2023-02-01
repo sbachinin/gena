@@ -1,97 +1,105 @@
-<style>
-    body {
-        background: #8d8d8d;
-        margin: 0;
-    }
+<!DOCTYPE html>
 
-    .controls {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px;
-    }
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gena</title>
 
-    .controls>span {
-        font-size: 20px;
-        font-family: roboto;
-        cursor: pointer;
-        padding: 2px 6px;
-        user-select: none;
-    }
+    <style>
+        body {
+            background: #8d8d8d;
+            margin: 0;
+        }
 
-    .controls .opus-id {
-        font-size: 16px;
-        color: white;
-        opacity: 0.3;
-        pointer-events: none;
-        width: 25px;
-        padding: 0;
-        text-align: center;
-    }
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+        }
 
-    .nav-button {
-        opacity: 0.2;
-        pointer-events: none;
-        transition: opacity 0.3s ease-out;
-    }
+        .controls>span {
+            font-size: 20px;
+            font-family: roboto;
+            cursor: pointer;
+            padding: 2px 6px;
+            user-select: none;
+        }
 
-    .nav-button.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+        .controls .opus-id {
+            font-size: 16px;
+            color: white;
+            opacity: 0.3;
+            pointer-events: none;
+            width: 25px;
+            padding: 0;
+            text-align: center;
+        }
 
-    .nav-button svg {
-        height: 32px;
-        width: 32px;
-        display: block;
-        fill: white;
-    }
+        .nav-button {
+            opacity: 0.2;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .nav-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .nav-button svg {
+            height: 32px;
+            width: 32px;
+            display: block;
+            fill: white;
+        }
 
 
-    .create.nav-button {
-        margin-left: 20px;
-    }
-    .create.nav-button svg {
-        height: 24px;
-        width: 24px;
-    }
+        .create.nav-button {
+            margin-left: 20px;
+        }
 
-    .keep {
-        margin-left: 20px;
-        display: flex;
-        color: white;
-    }
+        .create.nav-button svg {
+            height: 24px;
+            width: 24px;
+        }
 
-    .keep svg {
-        display: none;
-        margin-right: 8px;
-        fill: white;
-    }
+        .keep {
+            margin-left: 20px;
+            display: flex;
+            color: white;
+        }
 
-    .keep.selected .filled-checkbox,
-    .keep:not(.selected) .empty-checkbox {
-        display: block;
-        pointer-events: none;
-    }
+        .keep svg {
+            display: none;
+            margin-right: 8px;
+            fill: white;
+        }
 
-    canvas {
-        cursor: pointer;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: opacity 0.3s ease-out;
-        pointer-events: none;
-        max-height: calc(100% - 100px);
-        max-width: 96%;
-    }
+        .keep.selected .filled-checkbox,
+        .keep:not(.selected) .empty-checkbox {
+            display: block;
+            pointer-events: none;
+        }
 
-    canvas.current {
-        opacity: 1;
-        pointer-events: auto;
-    }
-</style>
+        canvas {
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+            pointer-events: none;
+            max-height: calc(100% - 100px);
+            max-width: 96%;
+        }
+
+        canvas.current {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
 
 <body>
     <canvas class="canvas-for-measurements"></canvas>
@@ -123,7 +131,9 @@
         </span>
 
         <span class="create nav-button active" title="Create new opus">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+            </svg>
         </span>
     </div>
 </body>
