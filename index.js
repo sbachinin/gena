@@ -92,6 +92,8 @@ const update_view = async () => {
     } else {
         document.querySelector('.right').classList.remove('active')
     }
+
+    document.querySelector('.opus-id').innerText = state.current_opus_id
 }
 
 document.body
