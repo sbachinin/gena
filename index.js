@@ -171,9 +171,10 @@ const create_next_canvas = () => {
     }
 
     // often draw a BORDER behind the bg_stroke
+    let border_width = 0
     if (Math.random() > 0.5) {
         ctx.strokeStyle = get_rand_color(50, 150, 0.8)
-        ctx.lineWidth = 50 + Math.random() * 70
+        border_width = ctx.lineWidth = 50 + Math.random() * 70
         ctx.strokeRect(0, 0, canvas.width, canvas.height)
     }
 
@@ -213,11 +214,16 @@ const create_next_canvas = () => {
     ctx.lineWidth = 2 + Math.random() * 6
     ctx.moveTo(...get_narrow_random_point())
     for (let i = 0; i < fore_thickness; i++) {
-        let point = get_narrow_random_point()
-        if (Math.random() > 0.95) {
-            point = get_random_point()
+        // usually draw a FORE LINE to a narrow area in the center
+        if (Math.random() > 0.15) {
+            ctx.lineTo(...get_narrow_random_point())
+        } else {
+            // occasionally allow a FORE LINE line to expand anywhere within the borders
+            ctx.lineTo(
+                border_width + Math.random() * (w - border_width * 2),
+                border_width + Math.random() * (h - border_width * 2),
+            )
         }
-        ctx.lineTo(...point)
     }
     ctx.stroke()
 
