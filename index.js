@@ -100,7 +100,8 @@ document.body
     .addEventListener('click', e => {
         const current_canvas = document.querySelector('canvas.current')
         const keep = document.querySelector('.keep')
-        if (e.target === current_canvas) {
+        if (e.target === current_canvas
+            || e.target.closest('.nav-button.create') !== null) {
             create_next_canvas()
 
         } else if (e.target === keep) {
