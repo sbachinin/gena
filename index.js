@@ -56,7 +56,7 @@ const get_jolly_color = (brightness_ratio = 0.6) => {
         avg = (random1 + random2 + random3) / 3
     }
 
-    return `rgb(${random1 * 255}, ${random2*255}, ${random3*255})`
+    return `rgb(${random1 * 255}, ${random2 * 255}, ${random3 * 255})`
 }
 
 //////////////////////////////////////////////////////
@@ -160,9 +160,17 @@ const create_next_canvas = () => {
     canvas.height = h
     const ctx = canvas.getContext('2d')
 
-    ctx.fillStyle = get_rand_color()
+    // draw BG color
+    ctx.fillStyle = get_jolly_color(0.3)
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+    // occasionally draw 2ND BG color
+    if (Math.random() > 0.7) {
+        ctx.fillStyle = get_jolly_color(0.3)
+        ctx.fillRect(0, 0, canvas.width, canvas.height / 2)
+    }
+
+    // often draw a BORDER behind the bg_stroke
     if (Math.random() > 0.5) {
         ctx.strokeStyle = get_rand_color(50, 150, 0.8)
         ctx.lineWidth = 50 + Math.random() * 70
@@ -177,7 +185,7 @@ const create_next_canvas = () => {
         ]
     }
 
-    const bg_thickness = 5000 + Math.random() * 5000
+    const bg_thickness = 6000 + Math.random() * 4000
     const fore_thickness = 7 + Math.random() * 20
 
 
