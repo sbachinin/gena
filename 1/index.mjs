@@ -111,7 +111,7 @@ const draw = (canvas) => {
 
     const is_thin = Math.random() > 0.5
     const fore_line_width = 2 + Math.random() * (is_thin ? 10 : 40)
-    const fore_lines_count = (7 + Math.random() * 12) / (fore_line_width / (is_thin ? 4 : 10))
+    const fore_lines_count = 4 + Math.random() * 12 / (fore_line_width / (is_thin ? 4 : 10))
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
