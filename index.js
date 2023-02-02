@@ -186,10 +186,10 @@ const create_next_canvas = () => {
         ]
     }
 
+
+
+    // bg stroke
     const bg_thickness = 6000 + Math.random() * 4000
-    const fore_thickness = 7 + Math.random() * 20
-
-
     ctx.strokeStyle = 'rgb(30, 30, 30)'
     ctx.lineWidth = 1
     ctx.beginPath()
@@ -200,6 +200,8 @@ const create_next_canvas = () => {
     ctx.stroke()
 
 
+
+    // fore stroke
     const get_narrow_random_point = () => {
         const [x, y] = get_random_point()
         return [
@@ -208,24 +210,35 @@ const create_next_canvas = () => {
         ]
     }
 
-
+    const is_thin = Math.random() > 0.5
+    const fore_line_width = 2 + Math.random() * (is_thin ? 10 : 40)
+    const fore_lines_count = (7 + Math.random() * 12) / (fore_line_width / (is_thin ? 4 : 10))
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
-    ctx.lineWidth = 2 + Math.random() * 6
+    ctx.lineWidth = fore_line_width
+    ctx.lineJoin = 'round'
     ctx.moveTo(...get_narrow_random_point())
-    for (let i = 0; i < fore_thickness; i++) {
+    for (let i = 0; i < fore_lines_count; i++) {
         // usually draw a FORE LINE to a narrow area in the center
-        if (Math.random() > 0.15) {
+        if (Math.random() > 0.25) {
             ctx.lineTo(...get_narrow_random_point())
         } else {
             // occasionally allow a FORE LINE line to expand anywhere within the borders
+            const margin = border_width + w / 30
             ctx.lineTo(
-                border_width + Math.random() * (w - border_width * 2),
-                border_width + Math.random() * (h - border_width * 2),
+                margin + Math.random() * (w - margin * 2),
+                margin + Math.random() * (h - margin * 2),
             )
         }
     }
     ctx.stroke()
+
+
+
+
+
+
+
 
     document.body.prepend(canvas)
 
