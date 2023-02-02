@@ -74,6 +74,20 @@ body {
     pointer-events: none;
 }
 
+.name {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    width: 100%;
+    color: #575757;
+    font-family: roboto, arial;
+    font-size: 20px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
 canvas {
     cursor: pointer;
     position: absolute;
