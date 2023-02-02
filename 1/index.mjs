@@ -72,8 +72,8 @@ const draw = (canvas) => {
     // often draw a BORDER behind the bg_stroke
     let border_width = 0
     if (Math.random() > 0.5) {
-        ctx.strokeStyle = get_rand_color(50, 150, 0.8)
-        border_width = ctx.lineWidth = 50 + Math.random() * 70
+        ctx.strokeStyle = get_rand_color(50, 150)
+        border_width = ctx.lineWidth = 50 + Math.random() * 200
         ctx.strokeRect(0, 0, canvas.width, canvas.height)
     }
 
