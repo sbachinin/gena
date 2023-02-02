@@ -1,3 +1,44 @@
+const insert_controls_html = () => {
+    document.querySelector('.controls').innerHTML = `
+<span class="home nav-button active">
+    <a href="../">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z"/></svg>
+    </a>
+</span>
+<span class="left nav-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
+    </svg>
+</span>
+
+<span class="opus-id">0</span>
+
+<span class="right nav-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
+    </svg>
+</span>
+
+<span class="keep" title="Pictures which are &#34;kept&#34; can be viewed later">
+    <svg class="filled-checkbox" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path
+            d="M11 17l-5-5.299 1.399-1.43 3.574 3.736 6.572-7.007 1.455 1.403-8 8.597zm11-15v20h-20v-20h20zm2-2h-24v24h24v-24z" />
+    </svg>
+    <svg class="empty-checkbox" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" />
+    </svg>
+    Keep
+</span>
+
+<span class="create nav-button active" title="Create new opus">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+    </svg>
+</span>    
+`
+}
+
+
 const canvas_fading_duration = parseFloat(
     getComputedStyle(document.querySelector('canvas')).transitionDuration
 ) * 1000
@@ -102,6 +143,8 @@ export const controller = {
             ids: {}, // [id]: boolean (saved or not)
             current_opus_id: null
         }
+
+        insert_controls_html()
 
         const create_next_canvas = () => {
             const canvas = document.createElement('canvas')

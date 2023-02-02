@@ -101,9 +101,8 @@ const draw = (canvas) => {
 
 
     // fore stroke
-    const is_thin = Math.random() > 0.5
-    const fore_line_width = 2 + Math.random() * (is_thin ? 10 : 30)
-    const fore_lines_count = (7 + Math.random() * 12) / (fore_line_width / (is_thin ? 4 : 10))
+    const fore_line_width = 2 + Math.random() * 10
+    const fore_lines_count = 7 + Math.random() * 12 / (fore_line_width / 10)
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
@@ -114,7 +113,7 @@ const draw = (canvas) => {
     ]
     ctx.moveTo(...last_point)
     for (let i = 0; i < fore_lines_count; i++) {
-        const line_span = 400 + Math.random() * 800
+        const line_span = 400 + Math.random() * 600
         const margin = border_width + w / 30
         const min_x = Math.min(
             w - margin - line_span,
