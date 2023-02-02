@@ -107,7 +107,7 @@ const draw = (canvas) => {
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
-    ctx.lineJoin = 'round'
+    ctx.lineJoin = 'bevel'
     const last_point = [
         canvas.width / 5 * 2 + Math.random() * canvas.width / 5,
         canvas.height / 5 * 2 + Math.random() * canvas.height / 5

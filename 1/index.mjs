@@ -115,7 +115,7 @@ const draw = (canvas) => {
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
-    ctx.lineJoin = 'round'
+    ctx.lineJoin = 'bevel'
     ctx.moveTo(...get_narrow_random_point())
     for (let i = 0; i < fore_lines_count; i++) {
         // usually draw a FORE LINE to a narrow area in the center
