@@ -1,4 +1,4 @@
-const projects_count = 2
+const projects_count = 3
 
 Array.from(Array(projects_count)).forEach((_, i) => {
     const id = i + 1
