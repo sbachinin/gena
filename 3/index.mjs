@@ -88,17 +88,16 @@ const draw = (canvas) => {
 
     // fore stroke
 
-    const fore_line_width = 6 + Math.random() * 100
+    const fore_line_width = 6 + Math.random() * 30
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
-    ctx.lineJoin = 'round'
-    ctx.lineCap = 'round'
     const span = fore_line_width * 4
-    let current_y = fore_line_width + Math.random() * span
-    while (current_y < (h - fore_line_width)) {
+    const margin = 200
+    let current_y = margin + Math.random() * span
+    while (current_y < (h - margin)) {
         const point = [
-            fore_line_width + Math.random() * (w - fore_line_width * 2),
+            margin + Math.random() * (w - margin * 2),
             current_y
         ]
 
