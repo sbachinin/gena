@@ -30,17 +30,38 @@ const get_rand_color = (min = 0, max = 255, greyness_ratio = 0 /* 0-1 */) => {
 }
 
 const get_jolly_color = (brightness_ratio = 0.6) => {
-    let random1, random2, random3, avg = 0
+    const colors = [
+        // reds
+        '#cc230a',
+        '#cc3300',
+        '#b51f09',
+        '#9e1b08',
 
-    // ensure high avg numbers
-    while (avg < brightness_ratio) {
-        random1 = Math.random()
-        random2 = Math.random()
-        random3 = Math.random()
-        avg = (random1 + random2 + random3) / 3
-    }
+        '#cc3300',
+        '#ff9966',
+        '#ffcc00',
+        '#99cc33',
+        '#1ebbd7',
+        '#be29ec',
+        // orange
+        '#ffc100',
+        '#ff9a00',
+        '#ff7400',
+        '#ff4d00',
+        '#ff0000',
+    ]
+    return colors[Math.floor(Math.random() * colors.length)]
+    // let random1, random2, random3, avg = 0
 
-    return `rgb(${random1 * 255}, ${random2 * 255}, ${random3 * 255})`
+    // // ensure high avg numbers
+    // while (avg < brightness_ratio) {
+    //     random1 = Math.random()
+    //     random2 = Math.random()
+    //     random3 = Math.random()
+    //     avg = (random1 + random2 + random3) / 3
+    // }
+
+    // return `rgb(${random1 * 255}, ${random2 * 255}, ${random3 * 255})`
 }
 
 
@@ -60,7 +81,13 @@ const draw = (canvas) => {
     const ctx = canvas.getContext('2d')
 
     // draw BG color
-    ctx.fillStyle = get_rand_color(0, 120)
+    ctx.fillStyle = 'rgb('
+        + (Math.random() * 65)
+        + ','
+        + (Math.random() * 25)
+        + ','
+        + (Math.random() * 40)
+        + ')'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     const get_wide_random_point = () => {
@@ -75,7 +102,7 @@ const draw = (canvas) => {
 
     // bg stroke
     const bg_thickness = 6000 + Math.random() * 4000
-    ctx.strokeStyle = 'rgb(130, 130, 130, .3)'
+    ctx.strokeStyle = 'rgb(130, 130, 130, .1)'
     ctx.lineWidth = 1
     ctx.beginPath()
     ctx.moveTo(...get_wide_random_point())
@@ -88,10 +115,10 @@ const draw = (canvas) => {
 
     // fore stroke
 
-    const fore_line_width = 6 + Math.random() * 10
+    const fore_line_width = 5 + Math.random() * 6
     console.log('fore line width: ', fore_line_width)
     ctx.beginPath()
-    ctx.strokeStyle = 'black'
+    ctx.strokeStyle = 'white'
     ctx.lineWidth = fore_line_width
     ctx.lineJoin = 'round'
     const margin = 200
