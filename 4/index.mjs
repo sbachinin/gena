@@ -115,14 +115,14 @@ const draw = (canvas) => {
 
     // fore stroke
 
+    const fore_thickness = 1.5 + Math.random() * 5
     const fore_line_width = 5 + Math.random() * 6
-    console.log('fore line width: ', fore_line_width)
     ctx.beginPath()
     ctx.strokeStyle = 'white'
     ctx.lineWidth = fore_line_width
     ctx.lineJoin = 'round'
     const margin = 200
-    const max_step_len = 250
+    const max_step_len = 120 * fore_thickness
 
     const points = []
 
@@ -157,7 +157,7 @@ const draw = (canvas) => {
                 var a = p[0] - pp[0]
                 var b = p[1] - pp[1]
                 const distance = Math.sqrt(a * a + b * b)
-                return distance < 120
+                return distance < (60 * fore_thickness)
             })
         }
 
