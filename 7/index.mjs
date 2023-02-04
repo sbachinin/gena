@@ -132,6 +132,29 @@ const colors = [
     'black',
 ]
 
+const klee_colors = [
+    '#EA4916',
+    '#1E6A83',
+    '#4C6666',
+    '#356D75',
+    '#1A6980',
+    '#55655B',
+    '#55655B',
+    '#1F6B80',
+    '#347F9C',
+    '#25718D',
+    '#C88334',
+    '#EED76B',
+    '#EAA27F',
+    '#D49F88',
+    '#6A1A25',
+    '#CBBAA6',
+    '#11121B',
+    '#BC596D',
+    '#12342D',
+    '#262537'
+]
+
 ////////////////////////////////////////////////////////
 const draw = (canvas) => {
 
@@ -146,7 +169,7 @@ const draw = (canvas) => {
 
     for (let xi = 0; xi < x_count; xi++) {
         for (let yi = 0; yi < y_count; yi++) {
-            ctx.fillStyle = random_of_arr(colors)
+            ctx.fillStyle = random_of_arr(klee_colors)
             const tile_x = w / x_count * xi
             const tile_y = h / y_count * yi
             ctx.fillRect(
