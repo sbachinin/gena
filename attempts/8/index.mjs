@@ -184,6 +184,8 @@ const draw = (canvas) => {
     for (let xi = 0; xi < x_count; xi++) {
         for (let yi = 0; yi < y_count; yi++) {
 
+            if (tiles[yi][xi] === undefined) continue
+
             if (get_luma(tiles[yi][xi].color) > 120) continue // don't draw shapes over light tiles
 
             const shape = random_of_arr(Object.keys(shapes))
@@ -204,23 +206,31 @@ const draw = (canvas) => {
             if (shape === 'circle') {
                 if (
                     is_on_edge
-                    || Math.random() > 0.5
-                    || get_neighbor_tiles(xi, yi).find(t => t && t.shape)
+                    || (
+                        // in 75% cases forbid drawing circles next to other shapes
+                        Math.random() > 0.25
+                        && get_neighbor_tiles(xi, yi).find(t => t && t.shape)
+                    )
                 ) {
-                    // forbid neighbor circles
                     continue
                 } else {
                     tiles[yi][xi].shape = 'circle'
-                    if (Math.random() > 0.6) { // paint n neighbors in random direction in same color
+                    if (Math.random() > 0.5) { // paint n neighbors in random direction in same color
                         const dir = get_random_direction()
                         if (dir === 'up') {
-                            tiles[yi - 1][xi].color = tiles[yi][xi].color
+                            tiles[yi][xi].y -= (tiles[yi][xi].h + tile_gap)
+                            tiles[yi][xi].h = tiles[yi][xi].h * 2 + tile_gap
+                            tiles[yi - 1][xi] = undefined
                         } else if (dir === 'right') {
-                            tiles[yi][xi + 1].color = tiles[yi][xi].color
+                            tiles[yi][xi].w = tiles[yi][xi].w * 2 + tile_gap
+                            tiles[yi][xi + 1] = undefined
                         } else if (dir === 'down') {
-                            tiles[yi + 1][xi].color = tiles[yi][xi].color
+                            tiles[yi][xi].h = tiles[yi][xi].h * 2 + tile_gap
+                            tiles[yi + 1][xi] = undefined
                         } else {
-                            tiles[yi][xi-1].color = tiles[yi][xi].color
+                            tiles[yi][xi].x -= (tiles[yi][xi].w + tile_gap)
+                            tiles[yi][xi].w = tiles[yi][xi].w * 2 + tile_gap
+                            tiles[yi][xi - 1] = undefined
                         }
                     }
                 }
@@ -252,6 +262,8 @@ const draw = (canvas) => {
 
     tiles.forEach((row, yi) => {
         row.forEach((tile, xi) => {
+
+            if (tile === undefined) return
 
             ctx.fillStyle = tile.color
             ctx.fillRect(
