@@ -11,67 +11,85 @@ const random_of_arr = (arr) => {
 }
 
 
-const draw_circle = (ctx, tile_x, tile_y, tile_w, tile_h, size_ratio) => {
-    size_ratio *= size_ratio
+const draw_circle = (
+    xi,
+    yi,
+    tiles,
+    ctx
+) => {
+    const tile = tiles[yi][xi]
+
+    const size_ratio = Math.pow(tile.shape_size_ratio, 2)
     ctx.fillStyle = 'white'
     ctx.beginPath()
-    const rad = Math.min(tile_w, tile_h) / 2
+    const rad = Math.min(tile.w, tile.h) / 2
     ctx.arc(
-        tile_x + tile_w / 2,
-        tile_y + tile_h / 2,
+        tile.x + tile.w / 2,
+        tile.y + tile.h / 2,
         rad * size_ratio,
         0,
         360
     )
     ctx.fill()
-    ctx.beginPath()
-    ctx.strokeStyle = 'white'
-    ctx.lineWidth = 6
-    ctx.moveTo(tile_x + tile_w / 2, tile_y + tile_h)
-    ctx.lineTo(tile_x + tile_w / 2, tile_y + tile_h / 2)
-    ctx.stroke()
+
+    if (Math.random() > 0.5) {
+        ctx.beginPath()
+        ctx.strokeStyle = 'white'
+        ctx.lineWidth = 6
+        ctx.moveTo(tile.x + tile.w / 2, tile.y + tile.h)
+        ctx.lineTo(tile.x + tile.w / 2, tile.y + tile.h / 2)
+        ctx.stroke()
+    }
 }
 
-const draw_triangle = (ctx, tile_x, tile_y, tile_w, tile_h, size_ratio) => {
+const draw_triangle = (
+    xi,
+    yi,
+    tiles,
+    ctx
+) => {
+    const tile = tiles[yi][xi]
+
+
     ctx.fillStyle = 'white'
     ctx.beginPath()
 
-    let size = Math.min(tile_w, tile_h) * (Math.pow(size_ratio, 1.5))
+    let size = Math.min(tile.w, tile.h) * (Math.pow(tile.shape_size_ratio, 1.5))
     if (size < 55) return
 
     const dir = Math.round(Math.random() * 4)
 
     if (dir === 0) {
-        ctx.moveTo(tile_x, tile_y + tile_h / 2 - size / 2)
-        ctx.lineTo(tile_x, tile_y + tile_h / 2 + size / 2)
-        ctx.lineTo(tile_x + size, tile_y + tile_h / 2)
+        ctx.moveTo(tile.x, tile.y + tile.h / 2 - size / 2)
+        ctx.lineTo(tile.x, tile.y + tile.h / 2 + size / 2)
+        ctx.lineTo(tile.x + size, tile.y + tile.h / 2)
     } else if (dir === 1) {
-        ctx.moveTo(tile_x + tile_w / 2 - size / 2, tile_y)
-        ctx.lineTo(tile_x + tile_w / 2 + size / 2, tile_y)
-        ctx.lineTo(tile_x + tile_w / 2, tile_y + size)
+        ctx.moveTo(tile.x + tile.w / 2 - size / 2, tile.y)
+        ctx.lineTo(tile.x + tile.w / 2 + size / 2, tile.y)
+        ctx.lineTo(tile.x + tile.w / 2, tile.y + size)
     } else if (dir === 2) {
-        ctx.moveTo(tile_x + tile_w, tile_y + tile_h / 2 - size / 2)
-        ctx.lineTo(tile_x + tile_w, tile_y + tile_h / 2 + size / 2)
-        ctx.lineTo(tile_x + tile_w - size, tile_y + tile_h / 2)
+        ctx.moveTo(tile.x + tile.w, tile.y + tile.h / 2 - size / 2)
+        ctx.lineTo(tile.x + tile.w, tile.y + tile.h / 2 + size / 2)
+        ctx.lineTo(tile.x + tile.w - size, tile.y + tile.h / 2)
     } else {
-        ctx.moveTo(tile_x + tile_w / 2 - size / 2, tile_y + tile_h)
-        ctx.lineTo(tile_x + tile_w / 2 + size / 2, tile_y + tile_h)
-        ctx.lineTo(tile_x + tile_w / 2, tile_y + tile_h - size)
+        ctx.moveTo(tile.x + tile.w / 2 - size / 2, tile.y + tile.h)
+        ctx.lineTo(tile.x + tile.w / 2 + size / 2, tile.y + tile.h)
+        ctx.lineTo(tile.x + tile.w / 2, tile.y + tile.h - size)
     }
     ctx.fill()
 }
 
 
-const draw_line = (ctx, tile_x, tile_y, tile_w, tile_h) => {
+const draw_line = () => {
     ctx.beginPath()
     ctx.strokeStyle = 'white'
     ctx.lineWidth = 6
     if (Math.random() > 0.5) {
-        ctx.moveTo(tile_x + tile_w / 2, tile_y + tile_h)
-        ctx.lineTo(tile_x + tile_w / 2, tile_y)
+        ctx.moveTo(tile.x + tile.w / 2, tile.y + tile.h)
+        ctx.lineTo(tile.x + tile.w / 2, tile.y)
     } else {
-        ctx.moveTo(tile_x, tile_y + tile_h / 2)
-        ctx.lineTo(tile_x + tile_w, tile_y + tile_h / 2)
+        ctx.moveTo(tile.x, tile.y + tile.h / 2)
+        ctx.lineTo(tile.x + tile.w, tile.y + tile.h / 2)
     }
     ctx.stroke()
 }
@@ -123,14 +141,22 @@ const draw = (canvas) => {
     canvas.height = h
     const ctx = canvas.getContext('2d')
 
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(
+        0, 0, w, h
+    )
+
+
+    let tile_gap = 0
+    if (Math.random() > 0.7) {
+        tile_gap = 10 + Math.random() * 10
+    }
+
     const x_count = 5 + Math.round(Math.random() * 4)
-    const tile_width = w / x_count
+    const tile_width = (w - tile_gap) / x_count
     const max_y_count = Math.floor(h / tile_width)
     const min_y_count = Math.floor(h / (tile_width * 1.5))
     const y_count = min_y_count + Math.round(Math.random() * (max_y_count - min_y_count))
-
-    const tile_w = w / x_count
-    const tile_h = h / y_count
 
     const tiles = []
 
@@ -138,7 +164,14 @@ const draw = (canvas) => {
         for (let yi = 0; yi < y_count; yi++) {
             let color = random_of_arr(klee_colors)
             tiles[yi] = tiles[yi] || []
-            tiles[yi][xi] = { color }
+            tiles[yi][xi] = {
+                color,
+                shape_size_ratio: 1,
+                x: tile_gap / 2 + (w - tile_gap) / x_count * xi - 1 + tile_gap / 2,
+                y: tile_gap / 2 + (h - tile_gap) / y_count * yi - 1 + tile_gap / 2,
+                w: (w - tile_gap) / x_count + 1 - tile_gap,
+                h: (h - tile_gap) / y_count + 1 - tile_gap
+            }
         }
     }
 
@@ -205,24 +238,19 @@ const draw = (canvas) => {
         row.forEach((tile, xi) => {
 
             ctx.fillStyle = tile.color
-
-            const tile_x = w / x_count * xi - 1
-            const tile_y = h / y_count * yi - 1
             ctx.fillRect(
-                tile_x,
-                tile_y,
-                tile_w + 1,
-                tile_h + 1
+                tile.x,
+                tile.y,
+                tile.w + 1,
+                tile.h + 1
             )
 
             if (tile.shape) {
                 shapes[tile.shape](
-                    ctx,
-                    tile_x,
-                    tile_y,
-                    tile_w + 1,
-                    tile_h + 1,
-                    tile.shape_size_ratio || 1
+                    xi,
+                    yi,
+                    tiles,
+                    ctx
                 )
             }
         })
