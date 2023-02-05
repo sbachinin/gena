@@ -1,4 +1,4 @@
-import { controller } from '../controller.mjs'
+import { controller } from '../../controller.mjs'
 
 const w = 1300,
     h = 1700
@@ -54,14 +54,28 @@ const get_jolly_color = (brightness_ratio = 0.6) => {
 
 ////////////////////////////////////////////////////////
 const draw = (canvas) => {
-
+    
     canvas.width = w
     canvas.height = h
     const ctx = canvas.getContext('2d')
 
     // draw BG color
-    ctx.fillStyle = get_rand_color(70, 160)
+    ctx.fillStyle = get_jolly_color(0.3)
     ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // occasionally draw 2ND BG color
+    if (Math.random() > 0.7) {
+        ctx.fillStyle = get_jolly_color(0.3)
+        ctx.fillRect(0, 0, canvas.width, canvas.height / 2)
+    }
+
+    // often draw a BORDER behind the bg_stroke
+    let border_width = 0
+    if (Math.random() > 0.5) {
+        ctx.strokeStyle = get_rand_color(50, 150)
+        border_width = ctx.lineWidth = 50 + Math.random() * 200
+        ctx.strokeRect(0, 0, canvas.width, canvas.height)
+    }
 
     const get_wide_random_point = () => {
         const [x, y] = get_random_point()
@@ -75,7 +89,7 @@ const draw = (canvas) => {
 
     // bg stroke
     const bg_thickness = 6000 + Math.random() * 4000
-    ctx.strokeStyle = 'rgb(30, 30, 30, .3)'
+    ctx.strokeStyle = 'rgb(30, 30, 30)'
     ctx.lineWidth = 1
     ctx.beginPath()
     ctx.moveTo(...get_wide_random_point())
@@ -87,24 +101,35 @@ const draw = (canvas) => {
 
 
     // fore stroke
+    const get_narrow_random_point = () => {
+        const [x, y] = get_random_point()
+        return [
+            canvas.width / 5 + x * 0.6,
+            canvas.height / 5 + y * 0.6
+        ]
+    }
 
-    const fore_line_width = 6 + Math.random() * 30
+    const is_thin = Math.random() > 0.5
+    const fore_line_width = 2 + Math.random() * (is_thin ? 10 : 40)
+    const fore_lines_count = 4 + Math.random() * 12 / (fore_line_width / (is_thin ? 4 : 10))
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
-    const span = fore_line_width * 4
-    const margin = 200
-    let current_y = margin + Math.random() * span
-    while (current_y < (h - margin)) {
-        const point = [
-            margin + Math.random() * (w - margin * 2),
-            current_y
-        ]
-
-        ctx.lineTo(...point)
-        current_y += 100 + Math.random() * span
+    ctx.lineJoin = 'bevel'
+    ctx.moveTo(...get_narrow_random_point())
+    for (let i = 0; i < fore_lines_count; i++) {
+        // usually draw a FORE LINE to a narrow area in the center
+        if (Math.random() > 0.25) {
+            ctx.lineTo(...get_narrow_random_point())
+        } else {
+            // occasionally allow a FORE LINE line to expand anywhere within the borders
+            const margin = border_width + w / 30
+            ctx.lineTo(
+                margin + Math.random() * (w - margin * 2),
+                margin + Math.random() * (h - margin * 2),
+            )
+        }
     }
-
     ctx.stroke()
 }
 

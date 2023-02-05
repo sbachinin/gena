@@ -1,4 +1,4 @@
-import { controller } from '../controller.mjs'
+import { controller } from '../../controller.mjs'
 
 const w = 1300,
     h = 1700
@@ -60,22 +60,8 @@ const draw = (canvas) => {
     const ctx = canvas.getContext('2d')
 
     // draw BG color
-    ctx.fillStyle = get_jolly_color(0.3)
+    ctx.fillStyle = get_rand_color(70, 160)
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    // occasionally draw 2ND BG color
-    if (Math.random() > 0.7) {
-        ctx.fillStyle = get_jolly_color(0.3)
-        ctx.fillRect(0, 0, canvas.width, canvas.height / 2)
-    }
-
-    // often draw a BORDER behind the bg_stroke
-    let border_width = 0
-    if (Math.random() > 0.5) {
-        ctx.strokeStyle = get_rand_color(50, 150)
-        border_width = ctx.lineWidth = 50 + Math.random() * 200
-        ctx.strokeRect(0, 0, canvas.width, canvas.height)
-    }
 
     const get_wide_random_point = () => {
         const [x, y] = get_random_point()
@@ -89,7 +75,7 @@ const draw = (canvas) => {
 
     // bg stroke
     const bg_thickness = 6000 + Math.random() * 4000
-    ctx.strokeStyle = 'rgb(30, 30, 30)'
+    ctx.strokeStyle = 'rgb(30, 30, 30, .3)'
     ctx.lineWidth = 1
     ctx.beginPath()
     ctx.moveTo(...get_wide_random_point())
@@ -101,41 +87,24 @@ const draw = (canvas) => {
 
 
     // fore stroke
-    const fore_line_width = 2 + Math.random() * 10
-    const fore_lines_count = 7 + Math.random() * 12 / (fore_line_width / 10)
+
+    const fore_line_width = 6 + Math.random() * 30
     ctx.beginPath()
     ctx.strokeStyle = get_jolly_color()
     ctx.lineWidth = fore_line_width
-    ctx.lineJoin = 'bevel'
-    const last_point = [
-        canvas.width / 5 * 2 + Math.random() * canvas.width / 5,
-        canvas.height / 5 * 2 + Math.random() * canvas.height / 5
-    ]
-    ctx.moveTo(...last_point)
-    for (let i = 0; i < fore_lines_count; i++) {
-        const line_span = 400 + Math.random() * 600
-        const margin = border_width + w / 30
-        const min_x = Math.min(
-            w - margin - line_span,
-            Math.max(
-                last_point[0] - line_span / 2,
-                margin
-            )
-        )
+    const span = fore_line_width * 4
+    const margin = 200
+    let current_y = margin + Math.random() * span
+    while (current_y < (h - margin)) {
+        const point = [
+            margin + Math.random() * (w - margin * 2),
+            current_y
+        ]
 
-        const min_y = Math.min(
-            h - margin - line_span,
-            Math.max(
-                last_point[1] - line_span / 2,
-                margin
-            )
-        )
-
-        last_point[0] = min_x + Math.random() * line_span
-        last_point[1] = min_y + Math.random() * line_span
-        ctx.lineTo(...last_point)
-
+        ctx.lineTo(...point)
+        current_y += 100 + Math.random() * span
     }
+
     ctx.stroke()
 }
 

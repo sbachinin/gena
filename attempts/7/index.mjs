@@ -1,4 +1,4 @@
-import { controller } from '../controller.mjs'
+import { controller } from '../../controller.mjs'
 
 const w = 1300,
     h = 1700

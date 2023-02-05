@@ -1,4 +1,4 @@
-import { controller } from '../controller.mjs'
+import { controller } from '../../controller.mjs'
 
 const w = 1300,
     h = 1700
@@ -82,11 +82,11 @@ const draw = (canvas) => {
 
     // draw BG color
     ctx.fillStyle = 'rgb('
-        + (Math.random() * 65)
+        + (Math.random() * 15)
         + ','
-        + (Math.random() * 25)
+        + (Math.random() * 10)
         + ','
-        + (Math.random() * 40)
+        + (Math.random() * 20)
         + ')'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -113,30 +113,32 @@ const draw = (canvas) => {
 
 
 
+    const margin = 200
+
+
+
+
+
+
+
     // fore stroke
 
     const fore_thickness = 1.5 + Math.random() * 5
     const fore_line_width = 5 + Math.random() * 6
-    ctx.beginPath()
-    ctx.strokeStyle = 'white'
-    ctx.lineWidth = fore_line_width
-    ctx.lineJoin = 'round'
-    const margin = 200
-    const max_step_len = 120 * fore_thickness
+    
 
     const points = []
 
-    const create_adjacent_point = () => {
-        const prev = points[points.length - 1]
-        let min_x = margin
-        let max_x = w - margin
-        let min_y = margin
-        let max_y = h - margin
+    const create_adjacent_point = (prev, max_distance, mrgn) => {
+        let min_x = mrgn
+        let max_x = w - mrgn
+        let min_y = mrgn
+        let max_y = h - mrgn
         if (prev) {
-            min_x = Math.max(margin, prev[0] - max_step_len)
-            max_x = Math.min(w - margin, prev[0] + max_step_len)
-            min_y = Math.max(margin, prev[1] - max_step_len)
-            max_y = Math.min(h - margin, prev[1] + max_step_len)
+            min_x = Math.max(mrgn, prev[0] - max_distance)
+            max_x = Math.min(w - mrgn, prev[0] + max_distance)
+            min_y = Math.max(mrgn, prev[1] - max_distance)
+            max_y = Math.min(h - mrgn, prev[1] + max_distance)
         }
         return [
             min_x + Math.random() * (max_x - min_x),
@@ -145,10 +147,28 @@ const draw = (canvas) => {
     }
 
 
-    ([
-        margin + Math.random() * (w - margin * 2),
-        margin + Math.random() * (h - margin * 2)
-    ])
+
+    ctx.lineWidth = 2
+    ctx.strokeStyle = get_jolly_color()
+    const bright_strokes_count = Math.random()* 15
+    for (let i=0; i< bright_strokes_count; i++) {
+        ctx.beginPath()
+        const point1 = [Math.random() * w, Math.random() * h]
+        ctx.lineTo(...point1)
+        ctx.lineTo(...create_adjacent_point(point1, 10, 0))
+        ctx.stroke()
+    }
+
+
+
+
+
+
+
+    ctx.beginPath()
+    ctx.strokeStyle = 'white'
+    ctx.lineWidth = fore_line_width
+    ctx.lineJoin = 'round'
 
     let has_available_space = true
     while (has_available_space) {
@@ -168,15 +188,36 @@ const draw = (canvas) => {
                 has_available_space = false
                 break
             }
-            point = create_adjacent_point()
+            point = create_adjacent_point(
+                points[points.length - 1],
+                120 * fore_thickness,
+                margin
+            )
             attempts_count++
         } while (point_is_close_to_another_point(point))
 
         ctx.lineTo(...point)
         points.push(point)
     }
-
     ctx.stroke()
+
+
+
+
+    // circles
+    const count = 5 + Math.floor(Math.random() * 5)
+    for (let xi = 0; xi <= count - 1; xi++) {
+        const x = margin + (w - margin * 2) / (count - 1) * xi
+        for (let yi = 0; yi <= count - 1; yi++) {
+            ctx.beginPath()
+            const y = margin + (h - margin * 2) / (count - 1) * yi
+            ctx.arc(x, y, 15, 0, 360)
+            ctx.fillStyle = 'black'
+            ctx.fill()
+        }
+    }
+
+
 }
 
 controller.init(draw)

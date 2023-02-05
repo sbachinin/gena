@@ -1,4 +1,4 @@
-import { controller } from '../controller.mjs'
+import { controller } from '../../controller.mjs'
 
 const w = 1300,
     h = 1700
@@ -37,7 +37,7 @@ const draw_triangle = (ctx, tile_x, tile_y, tile_w, tile_h, size_ratio) => {
     ctx.beginPath()
 
     let size = Math.min(tile_w, tile_h) * (Math.pow(size_ratio, 1.5))
-    // if (size < 55) return
+    if (size < 55) return
 
     const dir = Math.round(Math.random() * 4)
 
@@ -81,8 +81,8 @@ const actions = [
 
     // },
     draw_triangle,
-    // draw_circle,
-    // draw_line,
+    draw_circle,
+    draw_line,
     function none() { }
 ]
 
@@ -114,22 +114,10 @@ const get_luma = c => {
     var c = c.substring(1)      // strip #
     var rgb = parseInt(c, 16)   // convert rrggbb to decimal
     var r = (rgb >> 16) & 0xff  // extract red
-    var g = (rgb >> 8) & 0xff  // extract green
-    var b = (rgb >> 0) & 0xff  // extract blue
-
+    var g = (rgb >>  8) & 0xff  // extract green
+    var b = (rgb >>  0) & 0xff  // extract blue
+    
     return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
-}
-
-const get_centerness_ratio = (x_count, y_count, xi, yi) => {
-    const center = [x_count / 2, y_count / 2]
-    const x_tiles_from_center = Math.abs(center[0] - (xi + 0.5))
-    const y_tiles_from_center = Math.abs(center[1] - (yi + 0.5))
-    const x_ratio_from_center = x_tiles_from_center / ((x_count - 1) / 2)
-    const y_ratio_from_center = y_tiles_from_center / ((y_count - 1) / 2)
-
-    return 1 - (
-        (x_ratio_from_center + y_ratio_from_center) / 2
-    )
 }
 
 ////////////////////////////////////////////////////////
@@ -139,7 +127,7 @@ const draw = (canvas) => {
     canvas.height = h
     const ctx = canvas.getContext('2d')
 
-    const x_count = 15 + Math.round(Math.random() * 60)
+    const x_count = 5 + Math.round(Math.random() * 4)
     const tile_width = w / x_count
     const max_y_count = Math.floor(h / tile_width)
     const min_y_count = Math.floor(h / (tile_width * 1.5))
@@ -150,16 +138,9 @@ const draw = (canvas) => {
 
     const tiles = []
 
-    const sorted_colors = klee_colors.sort((a, b) => get_luma(a) - get_luma(b))
-
     for (let xi = 0; xi < x_count; xi++) {
         for (let yi = 0; yi < y_count; yi++) {
-            const cr = get_centerness_ratio(x_count, y_count, xi, yi)
-            const min_color_index = Math.max(0, Math.floor(cr * (sorted_colors.length - 1)) - 4)
-            const max_color_index = Math.min(sorted_colors.length - 1, min_color_index + 8)
-            const color_index = min_color_index + Math.round((Math.random() * (max_color_index - min_color_index)))
-            const color = sorted_colors[color_index]
-
+            const color = random_of_arr(klee_colors)
             ctx.fillStyle = color
 
             tiles[yi] = tiles[yi] || []
@@ -182,8 +163,7 @@ const draw = (canvas) => {
 
             const tile_x = w / x_count * xi
             const tile_y = h / y_count * yi
-            console.log(get_luma(tiles[yi][xi].color))
-
+            
             if (get_luma(tiles[yi][xi].color) > 120) continue // don't draw shapes over light tiles
 
             const action = random_of_arr(actions)
@@ -223,7 +203,16 @@ const draw = (canvas) => {
                 }
             }
 
-            const centerness_ratio = get_centerness_ratio(x_count, y_count, xi, yi)
+
+            const center = [x_count / 2, y_count / 2]
+            const x_tiles_from_center = Math.abs(center[0] - (xi + 0.5))
+            const y_tiles_from_center = Math.abs(center[1] - (yi + 0.5))
+            const x_ratio_from_center = x_tiles_from_center / ((x_count - 1) / 2)
+            const y_ratio_from_center = y_tiles_from_center / ((y_count - 1) / 2)
+
+            const centerness_ratio = 1 - (
+                (x_ratio_from_center + y_ratio_from_center) / 2
+            )
             const size_ratio = centerness_ratio + (1 - centerness_ratio) / 3
             action(
                 ctx,
