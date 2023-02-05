@@ -36,7 +36,7 @@ const draw_triangle = (ctx, tile_x, tile_y, tile_w, tile_h, size_ratio) => {
     ctx.fillStyle = 'white'
     ctx.beginPath()
 
-    let size = Math.min(tile_w, tile_h) * size_ratio
+    let size = Math.min(tile_w, tile_h) * (Math.pow(size_ratio, 1.5))
     if (size < 55) return
 
     const dir = Math.round(Math.random() * 4)
@@ -110,6 +110,16 @@ const klee_colors = [
     '#262537'
 ]
 
+const get_luma = c => {
+    var c = c.substring(1)      // strip #
+    var rgb = parseInt(c, 16)   // convert rrggbb to decimal
+    var r = (rgb >> 16) & 0xff  // extract red
+    var g = (rgb >>  8) & 0xff  // extract green
+    var b = (rgb >>  0) & 0xff  // extract blue
+    
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
+}
+
 ////////////////////////////////////////////////////////
 const draw = (canvas) => {
 
@@ -117,7 +127,7 @@ const draw = (canvas) => {
     canvas.height = h
     const ctx = canvas.getContext('2d')
 
-    const x_count = 6 + Math.round(Math.random() * 6)
+    const x_count = 5 + Math.round(Math.random() * 4)
     const tile_width = w / x_count
     const max_y_count = Math.floor(h / tile_width)
     const min_y_count = Math.floor(h / (tile_width * 1.5))
@@ -144,6 +154,17 @@ const draw = (canvas) => {
                 tile_w,
                 tile_h
             )
+        }
+    }
+
+
+    for (let xi = 0; xi < x_count; xi++) {
+        for (let yi = 0; yi < y_count; yi++) {
+
+            const tile_x = w / x_count * xi
+            const tile_y = h / y_count * yi
+            
+            if (get_luma(tiles[yi][xi].color) > 120) continue // don't draw shapes over light tiles
 
             const action = random_of_arr(actions)
 
@@ -158,7 +179,7 @@ const draw = (canvas) => {
                 tiles[y_i + 1]?.[x_i + 1],
             ])
 
-            const is_on_edge = xi === 0 || xi === x_count-1 || yi === 0 || yi === y_count-1
+            const is_on_edge = xi === 0 || xi === x_count - 1 || yi === 0 || yi === y_count - 1
 
             if (action === draw_circle) {
                 if (
@@ -201,6 +222,7 @@ const draw = (canvas) => {
                 tile_h,
                 size_ratio
             )
+
         }
     }
 
