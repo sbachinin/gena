@@ -76,15 +76,11 @@ const draw_line = (ctx, tile_x, tile_y, tile_w, tile_h) => {
     ctx.stroke()
 }
 
-const actions = [
-    // function sroke() {
-
-    // },
-    draw_triangle,
-    draw_circle,
-    draw_line,
-    function none() { }
-]
+const shapes = {
+    // sroke?
+    triangle: draw_triangle,
+    circle: draw_circle,
+}
 
 
 const klee_colors = [
@@ -114,9 +110,9 @@ const get_luma = c => {
     var c = c.substring(1)      // strip #
     var rgb = parseInt(c, 16)   // convert rrggbb to decimal
     var r = (rgb >> 16) & 0xff  // extract red
-    var g = (rgb >>  8) & 0xff  // extract green
-    var b = (rgb >>  0) & 0xff  // extract blue
-    
+    var g = (rgb >> 8) & 0xff  // extract green
+    var b = (rgb >> 0) & 0xff  // extract blue
+
     return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
 }
 
@@ -140,20 +136,9 @@ const draw = (canvas) => {
 
     for (let xi = 0; xi < x_count; xi++) {
         for (let yi = 0; yi < y_count; yi++) {
-            const color = random_of_arr(klee_colors)
-            ctx.fillStyle = color
-
+            let color = random_of_arr(klee_colors)
             tiles[yi] = tiles[yi] || []
             tiles[yi][xi] = { color }
-
-            const tile_x = w / x_count * xi
-            const tile_y = h / y_count * yi
-            ctx.fillRect(
-                tile_x,
-                tile_y,
-                tile_w,
-                tile_h
-            )
         }
     }
 
@@ -161,12 +146,11 @@ const draw = (canvas) => {
     for (let xi = 0; xi < x_count; xi++) {
         for (let yi = 0; yi < y_count; yi++) {
 
-            const tile_x = w / x_count * xi
-            const tile_y = h / y_count * yi
-            
             if (get_luma(tiles[yi][xi].color) > 120) continue // don't draw shapes over light tiles
 
-            const action = random_of_arr(actions)
+            const shape = random_of_arr(Object.keys(shapes))
+
+            const is_on_edge = xi === 0 || xi === x_count - 1 || yi === 0 || yi === y_count - 1
 
             const get_neighbor_tiles = (x_i, y_i) => ([
                 tiles[y_i - 1]?.[x_i - 1],
@@ -179,9 +163,7 @@ const draw = (canvas) => {
                 tiles[y_i + 1]?.[x_i + 1],
             ])
 
-            const is_on_edge = xi === 0 || xi === x_count - 1 || yi === 0 || yi === y_count - 1
-
-            if (action === draw_circle) {
+            if (shape === 'circle') {
                 if (
                     is_on_edge
                     || Math.random() > 0.5
@@ -191,10 +173,11 @@ const draw = (canvas) => {
                     continue
                 } else {
                     tiles[yi][xi].shape = 'circle'
+                    // maybe rewrite the lower neighbour's colors
                 }
             }
 
-            if (action === draw_triangle) {
+            if (shape === 'triangle') {
                 if (get_neighbor_tiles(xi, yi).find(t => t && t.shape)) {
                     // forbid neighbor triangles
                     continue
@@ -214,17 +197,38 @@ const draw = (canvas) => {
                 (x_ratio_from_center + y_ratio_from_center) / 2
             )
             const size_ratio = centerness_ratio + (1 - centerness_ratio) / 3
-            action(
-                ctx,
-                tile_x,
-                tile_y,
-                tile_w,
-                tile_h,
-                size_ratio
-            )
-
+            tiles[yi][xi].shape_size_ratio = size_ratio
         }
     }
+
+    tiles.forEach((row, yi) => {
+        row.forEach((tile, xi) => {
+
+            ctx.fillStyle = tile.color
+
+            const tile_x = w / x_count * xi - 1
+            const tile_y = h / y_count * yi - 1
+            ctx.fillRect(
+                tile_x,
+                tile_y,
+                tile_w + 1,
+                tile_h + 1
+            )
+
+            if (tile.shape) {
+                shapes[tile.shape](
+                    ctx,
+                    tile_x,
+                    tile_y,
+                    tile_w + 1,
+                    tile_h + 1,
+                    tile.shape_size_ratio || 1
+                )
+            }
+        })
+    })
+
+
 
 }
 
