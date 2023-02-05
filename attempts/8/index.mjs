@@ -134,6 +134,11 @@ const get_luma = c => {
     return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
 }
 
+
+const get_random_direction = () => {
+    return random_of_arr(['up', 'right', 'down', 'left'])
+}
+
 ////////////////////////////////////////////////////////
 const draw = (canvas) => {
 
@@ -206,7 +211,18 @@ const draw = (canvas) => {
                     continue
                 } else {
                     tiles[yi][xi].shape = 'circle'
-                    // maybe rewrite the lower neighbour's colors
+                    if (Math.random() > 0.6) { // paint n neighbors in random direction in same color
+                        const dir = get_random_direction()
+                        if (dir === 'up') {
+                            tiles[yi - 1][xi].color = tiles[yi][xi].color
+                        } else if (dir === 'right') {
+                            tiles[yi][xi + 1].color = tiles[yi][xi].color
+                        } else if (dir === 'down') {
+                            tiles[yi + 1][xi].color = tiles[yi][xi].color
+                        } else {
+                            tiles[yi][xi-1].color = tiles[yi][xi].color
+                        }
+                    }
                 }
             }
 
