@@ -26,20 +26,20 @@ const draw_circle = (
     ctx.arc(
         tile.x + tile.w / 2,
         tile.y + tile.h / 2,
-        rad * size_ratio,
+        rad * .90 * size_ratio,
         0,
         360
     )
     ctx.fill()
 
-    if (Math.random() > 0.8) {
-        ctx.beginPath()
-        ctx.strokeStyle = 'white'
-        ctx.lineWidth = 6
-        ctx.moveTo(tile.x + tile.w / 2, tile.y + tile.h)
-        ctx.lineTo(tile.x + tile.w / 2, tile.y + tile.h / 2)
-        ctx.stroke()
-    }
+    // if (Math.random() > 0.8) {
+    //     ctx.beginPath()
+    //     ctx.strokeStyle = 'white'
+    //     ctx.lineWidth = 6
+    //     ctx.moveTo(tile.x + tile.w / 2, tile.y + tile.h)
+    //     ctx.lineTo(tile.x + tile.w / 2, tile.y + tile.h / 2)
+    //     ctx.stroke()
+    // }
 }
 
 const draw_triangle = (
@@ -134,11 +134,6 @@ const get_luma = c => {
     return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
 }
 
-
-const get_random_direction = () => {
-    return random_of_arr(['up', 'right', 'down', 'left'])
-}
-
 ////////////////////////////////////////////////////////
 const draw = (canvas) => {
 
@@ -172,10 +167,10 @@ const draw = (canvas) => {
             tiles[yi][xi] = {
                 color,
                 shape_size_ratio: 1,
-                x: tile_gap / 2 + (w - tile_gap) / x_count * xi - 1 + tile_gap / 2,
-                y: tile_gap / 2 + (h - tile_gap) / y_count * yi - 1 + tile_gap / 2,
-                w: (w - tile_gap) / x_count + 1 - tile_gap,
-                h: (h - tile_gap) / y_count + 1 - tile_gap
+                x: tile_gap / 2 + (w - tile_gap) / x_count * xi + tile_gap / 2,
+                y: tile_gap / 2 + (h - tile_gap) / y_count * yi + tile_gap / 2,
+                w: (w - tile_gap) / x_count - tile_gap,
+                h: (h - tile_gap) / y_count - tile_gap
             }
         }
     }
@@ -216,22 +211,17 @@ const draw = (canvas) => {
                 } else {
                     tiles[yi][xi].shape = 'circle'
                     if (Math.random() > 0.5) { // paint n neighbors in random direction in same color
-                        const dir = get_random_direction()
-                        if (dir === 'up') {
-                            tiles[yi][xi].y -= (tiles[yi][xi].h + tile_gap)
-                            tiles[yi][xi].h = tiles[yi][xi].h * 2 + tile_gap
-                            tiles[yi - 1][xi] = undefined
-                        } else if (dir === 'right') {
+                        // TODO need to check if there's space to grow on the right or bottom
+                        if (Math.random() > 0.5) {
+                            // extend right
                             tiles[yi][xi].w = tiles[yi][xi].w * 2 + tile_gap
                             tiles[yi][xi + 1] = undefined
-                        } else if (dir === 'down') {
+                        } else {
+                            // extend down
                             tiles[yi][xi].h = tiles[yi][xi].h * 2 + tile_gap
                             tiles[yi + 1][xi] = undefined
-                        } else {
-                            tiles[yi][xi].x -= (tiles[yi][xi].w + tile_gap)
-                            tiles[yi][xi].w = tiles[yi][xi].w * 2 + tile_gap
-                            tiles[yi][xi - 1] = undefined
                         }
+                        // extending "backwards" (top & left is forbidden for it caused minor glitches like eating the neighbor which was extended too)
                     }
                 }
             }
@@ -263,7 +253,6 @@ const draw = (canvas) => {
 
 
 
-    // perhaps may do with 1-tier array
     tiles.forEach((row, yi) => {
         row.forEach((tile, xi) => {
 
@@ -273,9 +262,17 @@ const draw = (canvas) => {
             ctx.fillRect(
                 tile.x,
                 tile.y,
-                tile.w + 1,
-                tile.h + 1
+                tile.w,
+                tile.h
             )
+            // draw a border to prevent microgaps on the edges
+            ctx.lineWidth = 1
+            ctx.strokeStyle = tile.color
+            ctx.strokeRect(tile.x,
+                tile.y,
+                tile.w,
+                tile.h)
+
 
             if (tile.shape) {
                 shapes[tile.shape](
@@ -286,13 +283,15 @@ const draw = (canvas) => {
                 )
             }
 
-            ctx.lineWidth = 4
-            ctx.strokeStyle = '#fff'
+
             if (tile_gap) {
+                // draw a thicker border; otherwise there is a small gap btw triangle's white and tile_gap' white
+                ctx.lineWidth = 4
+                ctx.strokeStyle = '#fff'
                 ctx.strokeRect(tile.x,
                     tile.y,
-                    tile.w + 1,
-                    tile.h + 1)
+                    tile.w,
+                    tile.h)
             }
         })
     })
