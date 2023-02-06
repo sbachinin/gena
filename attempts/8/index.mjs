@@ -154,7 +154,7 @@ const draw = (canvas) => {
 
     let tile_gap = 0
     if (Math.random() > 0.7) {
-        tile_gap = 10 + Math.random() * 10
+        tile_gap = 6 + Math.random() * 6
     }
 
     const x_count = 5 + Math.round(Math.random() * 4)
@@ -260,6 +260,10 @@ const draw = (canvas) => {
         }
     }
 
+
+
+
+    // perhaps may do with 1-tier array
     tiles.forEach((row, yi) => {
         row.forEach((tile, xi) => {
 
@@ -280,6 +284,15 @@ const draw = (canvas) => {
                     tiles,
                     ctx
                 )
+            }
+
+            ctx.lineWidth = 4
+            ctx.strokeStyle = '#fff'
+            if (tile_gap) {
+                ctx.strokeRect(tile.x,
+                    tile.y,
+                    tile.w + 1,
+                    tile.h + 1)
             }
         })
     })
