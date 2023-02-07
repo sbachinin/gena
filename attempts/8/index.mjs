@@ -1,21 +1,28 @@
 import { controller } from '../../controller.mjs'
+import { get_tile_from_point } from './get_tile_from_point.mjs'
+import { klee_colors } from './klee_colors.mjs'
+import {
+    get_random_arr_index,
+    random_of_arr,
+    get_luma
+} from './utils.mjs'
+
 
 const w = 1300,
     h = 1700
-
-const get_random_arr_index = (max) => {
-    return Math.floor(Math.random() * max)
-}
-const random_of_arr = (arr) => {
-    return arr[get_random_arr_index(arr.length)]
-}
 
 
 const draw_circle = (
     rect,
     ctx
 ) => {
+    
     if (rect === null) return
+    
+    ctx.lineWidth = 1
+    ctx.strokeStyle = 'black'
+    ctx.strokeRect(rect.left, rect.top, rect.width, rect.height)
+    
     const size_ratio = 1 // Math.pow(tile.shape_size_ratio, 2)
     ctx.fillStyle = 'white'
     ctx.beginPath()
@@ -28,7 +35,7 @@ const draw_circle = (
         360
     )
     ctx.fill()
-    
+
 
     // if (Math.random() > 0.8) {
     //     ctx.beginPath()
@@ -96,40 +103,6 @@ const shapes = {
     // sroke?
     triangle: draw_triangle,
     circle: draw_circle,
-}
-
-
-const klee_colors = [
-    '#EA4916',
-    '#1E6A83',
-    '#4C6666',
-    '#356D75',
-    '#1A6980',
-    '#55655B',
-    '#55655B',
-    '#1F6B80',
-    '#347F9C',
-    '#25718D',
-    '#C88334',
-    '#EED76B',
-    '#EAA27F',
-    '#D49F88',
-    '#6A1A25',
-    '#CBBAA6',
-    '#11121B',
-    '#12342D',
-    '#262537',
-    '#262537'
-]
-
-const get_luma = c => {
-    var c = c.substring(1)      // strip #
-    var rgb = parseInt(c, 16)   // convert rrggbb to decimal
-    var r = (rgb >> 16) & 0xff  // extract red
-    var g = (rgb >> 8) & 0xff  // extract green
-    var b = (rgb >> 0) & 0xff  // extract blue
-
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
 }
 
 
@@ -222,79 +195,36 @@ const draw = (canvas) => {
 
 
 
-    const get_hex = (x, y) => {
-        const p = ctx.getImageData(x, y, 1, 1).data
-        if (p[0] > 255 || p[1] > 255 || p[2] > 255)
-            throw "Invalid color component";
-        return ((p[0] << 16) | (p[1] << 8) | p[2]).toString(16)
-    }
-
-    const get_random_tile_rect = () => {
-        const rand_point = [Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))]
-        const color = get_hex(...rand_point)
-        if (color === 'ffffff') return null
-        const cursor = [...rand_point]
-        while (true) {
-            const next_color = get_hex(...cursor)
-            if (next_color === color || next_color === 'ffffff') {
-                cursor[0]--
-            } else {
-                break
-            }
-        }
-        const left = cursor[0] + 1
-        cursor[0] = rand_point[0]
-        while (true) {
-            const next_color = get_hex(...cursor)
-            if (next_color === color || next_color === 'ffffff') {
-                cursor[0]++
-            } else {
-                break
-            }
-        }
-        const width = cursor[0] - left
-        cursor[0] = rand_point[0]
-        while (true) {
-            const next_color = get_hex(...cursor)
-            if (next_color === color || next_color === 'ffffff') {
-                cursor[1]--
-            } else {
-                break
-            }
-        }
-        const top = cursor[1]
-        cursor[1] = rand_point[1]
-        while (true) {
-            const next_color = get_hex(...cursor)
-            if (next_color === color || next_color === 'ffffff') {
-                cursor[1]++
-            } else {
-                break
-            }
-        }
-        const height = cursor[1] - 1 - top
-        return { left, top, width, height }
-    }
-
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
-    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
+    draw_circle(
+        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+        ctx)
     // var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
 
 
