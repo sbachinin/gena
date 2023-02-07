@@ -16,9 +16,9 @@ const draw_circle = (
     rect,
     ctx
 ) => {
-    
+       
     if (rect === null) return
-    
+
     ctx.lineWidth = 1
     ctx.strokeStyle = 'black'
     ctx.strokeRect(rect.left, rect.top, rect.width, rect.height)
