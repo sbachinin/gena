@@ -5,8 +5,15 @@ const get_hex = (x, y, ctx) => {
     return '#' + ((p[0] << 16) | (p[1] << 8) | p[2]).toString(16)
 }
 
+const are_colors_equal = ([r1, g1, b1, a1], [r2, g2, b2, a2]) => {
+    return r1 === r2
+        && g1 === g2
+        && b1 === b2
+        && a1 === a2
+}
+
 export const get_tile_from_point = (point, ctx) => {
-    const init_color = get_hex(...point, ctx)
+    const init_color_data = ctx.getImageData(...point, 1, 1).data
     if (init_color === '#ffffff') return null
 
 
@@ -14,7 +21,8 @@ export const get_tile_from_point = (point, ctx) => {
         let cursor = [...starting_point]
         while (true) {
             const next_cursor = get_next(cursor)
-            if (get_hex(...next_cursor, ctx) === init_color) {
+            const next_color_data = ctx.getImageData(...next_cursor, 1, 1).data
+            if (are_colors_equal(next_color_data, init_color_data)) {
                 cursor = next_cursor
             } else {
                 break
@@ -82,7 +90,7 @@ export const get_tile_from_point = (point, ctx) => {
         bottom,
         width: right - left,
         height: bottom - top,
-        color: init_color,
+        color: get_hex(...point, ctx),
         centerness_ratio,
         is_impure
     }

@@ -1,6 +1,6 @@
 import { controller } from '../../controller.mjs'
 import { get_tile_from_point } from './get_tile_from_point.mjs'
-import { klee_colors } from './colors.mjs'
+import { get_klee_colors } from './colors.mjs'
 import {
     random_of_arr,
 } from './utils.mjs'
@@ -108,7 +108,12 @@ const draw = (canvas) => {
         const w = w_per_slot * slots_of_tile.length
         const h = h_per_slot * slots_of_tile.length
 
-        return [x, y, w, h]
+        return [
+            Math.floor(x) - 0.5,
+            Math.floor(y) - 0.5,
+            Math.ceil(w),
+            Math.ceil(h)
+        ]
     }
 
     while (true) {
@@ -116,8 +121,11 @@ const draw = (canvas) => {
         if (first_free_slot_index === -1) {
             break
         }
+
+        // TODO sometimes draw all white tiles with thin black borders
+
         const tile = {
-            color: random_of_arr(klee_colors),
+            color: random_of_arr(get_klee_colors()),
             slots: [first_free_slot_index],
         }
         tiles.push(tile)
@@ -160,7 +168,6 @@ const draw = (canvas) => {
     }
 
     const circles_count = Math.round(x_count * y_count / 7)
-    console.log(circles_count)
     Array.from(Array(circles_count)).forEach(
         _ => {
             draw_circle(
