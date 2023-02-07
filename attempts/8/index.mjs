@@ -1,51 +1,17 @@
 import { controller } from '../../controller.mjs'
 import { get_tile_from_point } from './get_tile_from_point.mjs'
-import { klee_colors } from './klee_colors.mjs'
+import { klee_colors } from './colors.mjs'
 import {
-    get_random_arr_index,
     random_of_arr,
-    get_luma
 } from './utils.mjs'
+
+import { draw_circle } from './draw_circle.mjs'
 
 
 const w = 1300,
     h = 1700
 
 
-const draw_circle = (
-    rect,
-    ctx
-) => {
-       
-    if (rect === null) return
-
-    ctx.lineWidth = 1
-    ctx.strokeStyle = 'black'
-    ctx.strokeRect(rect.left, rect.top, rect.width, rect.height)
-    
-    const size_ratio = 1 // Math.pow(tile.shape_size_ratio, 2)
-    ctx.fillStyle = 'white'
-    ctx.beginPath()
-    const rad = Math.min(rect.width, rect.height) / 2
-    ctx.arc(
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2,
-        rad * .90 * size_ratio,
-        0,
-        360
-    )
-    ctx.fill()
-
-
-    // if (Math.random() > 0.8) {
-    //     ctx.beginPath()
-    //     ctx.strokeStyle = 'white'
-    //     ctx.lineWidth = 6
-    //     ctx.moveTo(tile.x + tile.w / 2, tile.y + tile.h)
-    //     ctx.lineTo(tile.x + tile.w / 2, tile.y + tile.h / 2)
-    //     ctx.stroke()
-    // }
-}
 
 const draw_triangle = (
     xi,
@@ -193,38 +159,16 @@ const draw = (canvas) => {
 
     }
 
+    const circles_count = Math.round(x_count * y_count / 7)
+    console.log(circles_count)
+    Array.from(Array(circles_count)).forEach(
+        _ => {
+            draw_circle(
+                get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
+                ctx)
+        }
+    )
 
-
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
-    draw_circle(
-        get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx),
-        ctx)
     // var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
 
 
@@ -276,17 +220,9 @@ const draw = (canvas) => {
     //         }
 
 
-    //         const center = [x_count / 2, y_count / 2]
-    //         const x_tiles_from_center = Math.abs(center[0] - (xi + 0.5))
-    //         const y_tiles_from_center = Math.abs(center[1] - (yi + 0.5))
-    //         const x_ratio_from_center = x_tiles_from_center / ((x_count - 1) / 2)
-    //         const y_ratio_from_center = y_tiles_from_center / ((y_count - 1) / 2)
-
-    //         const centerness_ratio = 1 - (
-    //             (x_ratio_from_center + y_ratio_from_center) / 2
-    //         )
-    //         const size_ratio = centerness_ratio + (1 - centerness_ratio) / 3
-    //         tiles[yi][xi].shape_size_ratio = size_ratio
+            
+            // const size_ratio = centerness_ratio + (1 - centerness_ratio) / 3
+            // tiles[yi][xi].shape_size_ratio = size_ratio
     //     }
     // }
 
