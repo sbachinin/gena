@@ -12,25 +12,23 @@ const random_of_arr = (arr) => {
 
 
 const draw_circle = (
-    xi,
-    yi,
-    tiles,
+    rect,
     ctx
 ) => {
-    const tile = tiles[yi][xi]
-
-    const size_ratio = Math.pow(tile.shape_size_ratio, 2)
+    if (rect === null) return
+    const size_ratio = 1 // Math.pow(tile.shape_size_ratio, 2)
     ctx.fillStyle = 'white'
     ctx.beginPath()
-    const rad = Math.min(tile.w, tile.h) / 2
+    const rad = Math.min(rect.width, rect.height) / 2
     ctx.arc(
-        tile.x + tile.w / 2,
-        tile.y + tile.h / 2,
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2,
         rad * .90 * size_ratio,
         0,
         360
     )
     ctx.fill()
+    
 
     // if (Math.random() > 0.8) {
     //     ctx.beginPath()
@@ -140,15 +138,15 @@ const draw = (canvas) => {
 
     canvas.width = w
     canvas.height = h
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
     ctx.fillStyle = '#fff'
     ctx.fillRect(0, 0, w, h)
 
     let tile_gap = 0
-    if (Math.random() > 0.7) {
-        tile_gap = 20 + Math.random() * 20
-    }
+    // if (Math.random() > 0.7) {
+    //     tile_gap = 20 + Math.random() * 20
+    // }
 
     const x_count = 5 + Math.round(Math.random() * 4)
     const w_per_slot = (w - tile_gap) / x_count
@@ -221,6 +219,83 @@ const draw = (canvas) => {
                 } */
 
     }
+
+
+
+    const get_hex = (x, y) => {
+        const p = ctx.getImageData(x, y, 1, 1).data
+        if (p[0] > 255 || p[1] > 255 || p[2] > 255)
+            throw "Invalid color component";
+        return ((p[0] << 16) | (p[1] << 8) | p[2]).toString(16)
+    }
+
+    const get_random_tile_rect = () => {
+        const rand_point = [Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))]
+        const color = get_hex(...rand_point)
+        if (color === 'ffffff') return null
+        const cursor = [...rand_point]
+        while (true) {
+            const next_color = get_hex(...cursor)
+            if (next_color === color || next_color === 'ffffff') {
+                cursor[0]--
+            } else {
+                break
+            }
+        }
+        const left = cursor[0] + 1
+        cursor[0] = rand_point[0]
+        while (true) {
+            const next_color = get_hex(...cursor)
+            if (next_color === color || next_color === 'ffffff') {
+                cursor[0]++
+            } else {
+                break
+            }
+        }
+        const width = cursor[0] - left
+        cursor[0] = rand_point[0]
+        while (true) {
+            const next_color = get_hex(...cursor)
+            if (next_color === color || next_color === 'ffffff') {
+                cursor[1]--
+            } else {
+                break
+            }
+        }
+        const top = cursor[1]
+        cursor[1] = rand_point[1]
+        while (true) {
+            const next_color = get_hex(...cursor)
+            if (next_color === color || next_color === 'ffffff') {
+                cursor[1]++
+            } else {
+                break
+            }
+        }
+        const height = cursor[1] - 1 - top
+        return { left, top, width, height }
+    }
+
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    draw_circle(get_random_tile_rect(), ctx)
+    // var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
 
 
     // for (let xi = 0; xi < x_count; xi++) {
