@@ -1,25 +1,48 @@
-export const klee_colors = [
-    '#EA4916',
-    '#1E6A83',
-    '#4C6666',
-    '#356D75',
-    '#1A6980',
-    '#55655B',
-    '#55655B',
-    '#1F6B80',
-    '#347F9C',
-    '#25718D',
-    '#C88334',
-    '#EED76B',
-    '#EAA27F',
-    '#D49F88',
-    '#6A1A25',
-    '#CBBAA6',
-    '#11121B',
-    '#12342D',
-    '#262537',
-    '#262537'
-]
+import { get_luma } from './utils.mjs'
+
+export const klee_colors = {
+    bright: [
+        '#ea4916',
+        '#cb7155',
+        '#c88334',
+        '#eaa27f',
+        '#d49f88',
+        '#e08d65'
+    ],
+
+    neutral: [
+        '#4f4b92',
+        '#1e6a83',
+        '#4c6666',
+        '#356d75',
+        '#1a6980',
+        '#55655b',
+        '#55655b',
+        '#347f9c',
+        '#25718d'
+    ],
+
+    dark: [
+        '#6a1a25',
+        '#11121b',
+        '#12342d',
+        '#262537',
+        '#262537',
+        '#2b2c36'
+    ]
+}
+
+export const get_klee_colors = () => {
+    return [
+        ...klee_colors.bright,
+        ...klee_colors.neutral,
+        ...klee_colors.dark
+    ]
+}
+
+export const get_sorted_klee_colors = () => {
+    return get_klee_colors().sort(get_luma)
+}
 
 
 export const hexTransparencies = {
