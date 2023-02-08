@@ -17,12 +17,6 @@ export const draw_circle = (
     ctx.beginPath()
     
     let shape_color = '#ffffff'
-    // pick a shape color which is in high contrast to rect color
-    if (klee_colors.bright.includes(rect.color)) {
-        shape_color = random_of_arr(klee_colors.dark)
-    } else if (klee_colors.dark.includes(rect.color)) {
-        shape_color = random_of_arr(klee_colors.bright)
-    }
 
     const [r, g, b] = parse_hex(shape_color)
     const opacity = rect.centerness_ratio < 0.6 ? Math.max(0.1, rect.centerness_ratio) : 1

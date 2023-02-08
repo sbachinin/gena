@@ -1,9 +1,4 @@
-const get_hex = (x, y, ctx) => {
-    const p = ctx.getImageData(x, y, 1, 1).data
-    if (p[0] > 255 || p[1] > 255 || p[2] > 255)
-        throw "Invalid color component";
-    return '#' + ((p[0] << 16) | (p[1] << 8) | p[2]).toString(16)
-}
+
 
 const are_colors_equal = ([r1, g1, b1, a1], [r2, g2, b2, a2]) => {
     return r1 === r2
@@ -14,7 +9,7 @@ const are_colors_equal = ([r1, g1, b1, a1], [r2, g2, b2, a2]) => {
 
 export const get_tile_from_point = (point, ctx) => {
     const init_color_data = ctx.getImageData(...point, 1, 1).data
-    if (init_color === '#ffffff') return null
+    // if (init_color_data === '#ffffff') return null
 
 
     const find_edge = (starting_point, get_next) => {
@@ -90,7 +85,7 @@ export const get_tile_from_point = (point, ctx) => {
         bottom,
         width: right - left,
         height: bottom - top,
-        color: get_hex(...point, ctx),
+        color_data: init_color_data,
         centerness_ratio,
         is_impure
     }

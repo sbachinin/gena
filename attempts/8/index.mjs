@@ -167,7 +167,23 @@ const draw = (canvas) => {
 
     }
 
-    const circles_count = Math.round(x_count * y_count / 7)
+
+
+
+
+    Array.from(Array(Math.round((x_count * y_count) / 30))).forEach(
+        _ => {
+            const tile = get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx)
+            ctx.beginPath()
+            ctx.strokeStyle = 'white'
+            const line_width = 5 + Math.random() * (tile.width / 6)
+            ctx.lineWidth = line_width
+            ctx.strokeRect(tile.left + line_width / 2, tile.top + line_width / 2, tile.width - line_width + 1, tile.height - line_width + 1)
+        }
+    )
+
+
+    const circles_count = Math.round((x_count * y_count) / 7)
     Array.from(Array(circles_count)).forEach(
         _ => {
             draw_circle(
@@ -227,9 +243,9 @@ const draw = (canvas) => {
     //         }
 
 
-            
-            // const size_ratio = centerness_ratio + (1 - centerness_ratio) / 3
-            // tiles[yi][xi].shape_size_ratio = size_ratio
+
+    // const size_ratio = centerness_ratio + (1 - centerness_ratio) / 3
+    // tiles[yi][xi].shape_size_ratio = size_ratio
     //     }
     // }
 

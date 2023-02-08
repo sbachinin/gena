@@ -44,6 +44,12 @@ export const get_sorted_klee_colors = () => {
     return get_klee_colors().sort(get_luma)
 }
 
+export const get_hex = (x, y, ctx) => {
+    const p = ctx.getImageData(x, y, 1, 1).data
+    if (p[0] > 255 || p[1] > 255 || p[2] > 255)
+        throw "Invalid color component";
+    return '#' + ((p[0] << 16) | (p[1] << 8) | p[2]).toString(16)
+}
 
 export const hexTransparencies = {
     100: 'FF',
