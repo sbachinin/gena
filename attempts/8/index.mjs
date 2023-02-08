@@ -1,9 +1,8 @@
 import { controller } from '../../controller.mjs'
 import { get_tile_from_point } from './get_tile_from_point.mjs'
 import { get_klee_colors } from './colors.mjs'
-import {
-    random_of_arr,
-} from './utils.mjs'
+import { random_of_arr } from './utils.mjs'
+import { draw_borders } from './draw_borders.mjs'
 
 import { draw_circle } from './draw_circle.mjs'
 
@@ -87,7 +86,7 @@ const draw = (canvas) => {
     //     tile_gap = 20 + Math.random() * 20
     // }
 
-    const x_count = 5 + Math.round(Math.random() * 4)
+    const x_count = 8 + Math.round(Math.random() * 4)
     const w_per_slot = (w - tile_gap) / x_count
     const max_y_count = Math.floor(h / w_per_slot)
     const min_y_count = Math.floor(h / (w_per_slot * 1.5))
@@ -171,15 +170,9 @@ const draw = (canvas) => {
 
 
 
-    Array.from(Array(Math.round((x_count * y_count) / 30))).forEach(
-        _ => {
-            const tile = get_tile_from_point([Math.round(Math.random() * (w - 1)), Math.round(Math.random() * (h - 1))], ctx)
-            ctx.beginPath()
-            ctx.strokeStyle = 'white'
-            const line_width = 5 + Math.random() * (tile.width / 6)
-            ctx.lineWidth = line_width
-            ctx.strokeRect(tile.left + line_width / 2, tile.top + line_width / 2, tile.width - line_width + 1, tile.height - line_width + 1)
-        }
+    draw_borders(
+        Math.round((x_count * y_count) / 2),
+        ctx
     )
 
 

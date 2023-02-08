@@ -1,5 +1,3 @@
-import { get_luma } from './utils.mjs'
-
 export const klee_colors = {
     bright: [
         '#ea4916',
@@ -40,15 +38,25 @@ export const get_klee_colors = () => {
     ]
 }
 
-export const get_sorted_klee_colors = () => {
-    return get_klee_colors().sort(get_luma)
+export const get_luma = color_data => { // (luma means perceived brightness)
+    const [r, g, b] = color_data
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b // per ITU-R BT.709
 }
 
-export const get_hex = (x, y, ctx) => {
-    const p = ctx.getImageData(x, y, 1, 1).data
-    if (p[0] > 255 || p[1] > 255 || p[2] > 255)
-        throw "Invalid color component";
-    return '#' + ((p[0] << 16) | (p[1] << 8) | p[2]).toString(16)
+export const get_hex_from_image_data = (data) => {
+    const [r, g, b] = data
+    if (r > 255 || g > 255 || b > 255)
+        throw "Invalid color component"
+    return '#' + ((r << 16) | (g << 8) | b).toString(16)
+}
+
+export const parse_hex = c => {
+    var c = c.substring(1)      // strip #
+    var rgb = parseInt(c, 16)   // convert rrggbb to decimal
+    var r = (rgb >> 16) & 0xff  // extract red
+    var g = (rgb >> 8) & 0xff  // extract green
+    var b = (rgb >> 0) & 0xff  // extract blue
+    return [r, g, b]
 }
 
 export const hexTransparencies = {
