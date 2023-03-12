@@ -28,35 +28,60 @@ export const get_tile_from_point = (point, ctx) => {
 
 
 
-    const left_edge_1 = find_edge(point, p => ([p[0] - 1, p[1]]))
-    const right_edge_1 = find_edge(point, p => ([p[0] + 1, p[1]]))
-    const top_edge_1 = find_edge(point, p => ([p[0], p[1] - 1]))
-    const bottom_edge_1 = find_edge(point, p => ([p[0], p[1] + 1]))
+    const left = find_edge(point, p => ([p[0] - 1, p[1]]))[0]
+    const right = find_edge(point, p => ([p[0] + 1, p[1]]))[0]
+    const top = find_edge(point, p => ([p[0], p[1] - 1]))[1]
+    const bottom = find_edge(point, p => ([p[0], p[1] + 1]))[1]
+
+    const rect_data = ctx.getImageData(
+        left,
+        top,
+        right - left,
+        bottom - top
+    ).data
+    let is_pure_rect = true
+    for (let i = 0; i <= rect_data.length - 1; i += 4) {
+        if (rect_data[i] !== rect_data[0]) {
+            is_pure_rect = false
+            break
+        }
+    }
 
 
     // try extend the edges to check if rect isn't actually larger
-    const top_left_edge = find_edge(top_edge_1, p => ([p[0] - 1, p[1]])) // try expand top edge to left
-    const bottom_left_edge = find_edge(bottom_edge_1, p => ([p[0] - 1, p[1]])) // try expand bottom edge to left
-    const top_right_edge = find_edge(top_edge_1, p => ([p[0] + 1, p[1]])) // try expand top edge to right
-    const bottom_right_edge = find_edge(bottom_edge_1, p => ([p[0] + 1, p[1]])) // try expand bottom edge to right
-    const left_top_edge = find_edge(left_edge_1, p => ([p[0], p[1] - 1])) // try expand left edge up
-    const right_top_edge = find_edge(right_edge_1, p => ([p[0], p[1] - 1])) // try expand right edge up
-    const left_bottom_edge = find_edge(left_edge_1, p => ([p[0], p[1] + 1])) // try expand right edge down
-    const right_bottom_edge = find_edge(right_edge_1, p => ([p[0], p[1] + 1])) // try expand right edge down
+    // const top_left_edge = find_edge(top_edge_1, p => ([p[0] - 1, p[1]])) // try expand top edge to left
+    // const bottom_left_edge = find_edge(bottom_edge_1, p => ([p[0] - 1, p[1]])) // try expand bottom edge to left
+    // const top_right_edge = find_edge(top_edge_1, p => ([p[0] + 1, p[1]])) // try expand top edge to right
+    // const bottom_right_edge = find_edge(bottom_edge_1, p => ([p[0] + 1, p[1]])) // try expand bottom edge to right
+    // const left_top_edge = find_edge(left_edge_1, p => ([p[0], p[1] - 1])) // try expand left edge up
+    // const right_top_edge = find_edge(right_edge_1, p => ([p[0], p[1] - 1])) // try expand right edge up
+    // const left_bottom_edge = find_edge(left_edge_1, p => ([p[0], p[1] + 1])) // try expand right edge down
+    // const right_bottom_edge = find_edge(right_edge_1, p => ([p[0], p[1] + 1])) // try expand right edge down
 
-    const left = Math.min(top_left_edge[0], bottom_left_edge[0])
-    const right = Math.max(top_right_edge[0], bottom_right_edge[0])
-    const top = Math.min(left_top_edge[1], right_top_edge[1])
-    const bottom = Math.max(left_bottom_edge[1], right_bottom_edge[1])
+    // const left = Math.min(top_left_edge[0], bottom_left_edge[0])
+    // const right = Math.max(top_right_edge[0], bottom_right_edge[0])
+    // const top = Math.min(left_top_edge[1], right_top_edge[1])
+    // const bottom = Math.max(left_bottom_edge[1], right_bottom_edge[1])
 
-    const inaccuracy = 2
 
-    const is_impure = (
-        Math.abs(left - left_edge_1[0]) > inaccuracy
-        || Math.abs(right - right_edge_1[0]) > inaccuracy
-        || Math.abs(top - top_edge_1[1]) > inaccuracy
-        || Math.abs(bottom < bottom_edge_1[1]) > inaccuracy
-    )
+    // const rect_data = ctx.getImageData(left, top, right - left, top - bottom).data
+    // let count = 0
+    // while (count <= rect_data.length - 1) {
+    //     if (rect_data[count] === rect_data[0]) {
+    //         count += 4
+    //     } else {
+    //         break
+    //     }
+    // }
+
+    // const inaccuracy = 2
+
+    // const is_impure = (
+    //     Math.abs(left - left_edge_1[0]) > inaccuracy
+    //     || Math.abs(right - right_edge_1[0]) > inaccuracy
+    //     || Math.abs(top - top_edge_1[1]) > inaccuracy
+    //     || Math.abs(bottom < bottom_edge_1[1]) > inaccuracy
+    // )
     // TODO check several points within rect for different color
 
 
@@ -87,6 +112,6 @@ export const get_tile_from_point = (point, ctx) => {
         height: bottom - top,
         color_data: init_color_data,
         centerness_ratio,
-        is_impure
+        is_pure: is_pure_rect
     }
 }

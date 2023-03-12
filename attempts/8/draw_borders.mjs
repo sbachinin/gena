@@ -28,12 +28,15 @@ export const draw_borders = (count, ctx) => {
         return get_hex_from_image_data(remotest_color)
     }
 
-    Array.from(Array(count)).forEach(
+    Array.from(Array(count / 2)).forEach(
         _ => {
             const tile = get_tile_from_point([
                 Math.round(Math.random() * (ctx.canvas.width - 1)),
                 Math.round(Math.random() * (ctx.canvas.height - 1))
             ], ctx)
+            
+            if (!tile.is_pure) return
+
             ctx.beginPath()
             ctx.strokeStyle = get_neighbor_color(tile)
             const max_line_width = (Math.min(tile.width, tile.height) - 40) / 2

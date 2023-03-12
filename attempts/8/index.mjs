@@ -171,7 +171,7 @@ const draw = (canvas) => {
 
 
     draw_borders(
-        Math.round((x_count * y_count) / 2),
+        Math.round((x_count * y_count) * 2),
         ctx
     )
 

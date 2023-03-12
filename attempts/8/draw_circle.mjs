@@ -6,12 +6,13 @@ export const draw_circle = (
 ) => {
 
     if (rect === null) return
-    if (rect.is_impure) return
+    if (!rect.is_pure) return
 
     const mild_centerness_ratio = rect.centerness_ratio + (1 - rect.centerness_ratio) / 3
     const randomly_adjusted_centerness = Math.min(1, mild_centerness_ratio - 0.10 + Math.random() * 0.2)
 
     let rad = (Math.min(rect.width, rect.height) / 2) * 0.9 * randomly_adjusted_centerness
+    if (rad < 20) return
     ctx.beginPath()
     
     let shape_color = '#ffffff'
