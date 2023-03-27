@@ -39,8 +39,9 @@ export const draw_borders = (count, ctx) => {
 
             ctx.beginPath()
             ctx.strokeStyle = get_neighbor_color(tile)
-            const max_line_width = (Math.min(tile.width, tile.height) - 40) / 2
-            const line_width = random_of_arr([20, 40, 60, 80].filter(w => w <= max_line_width))
+            const size = Math.min(tile.width, tile.height)
+            const max_line_width = (size - 20) / 2
+            const line_width = 5 + Math.random() * size
             ctx.lineWidth = line_width
             ctx.strokeRect(tile.left + line_width / 2, tile.top + line_width / 2, tile.width - line_width + 1, tile.height - line_width + 1)
         }

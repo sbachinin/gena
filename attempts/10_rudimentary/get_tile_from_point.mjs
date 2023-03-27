@@ -33,6 +33,10 @@ export const get_tile_from_point = (point, ctx) => {
     const top = find_edge(point, p => ([p[0], p[1] - 1]))[1]
     const bottom = find_edge(point, p => ([p[0], p[1] + 1]))[1]
 
+
+    console.log(point)
+    console.log(right, left, top, bottom)
+
     const rect_data = ctx.getImageData(
         left,
         top,
