@@ -56,22 +56,22 @@ const get_centerness_ratio = (x_count, y_count, xi, yi) => {
     )
 }
 
-const ring_width = 15 + Math.random() * 10
+const draw_circle = (ctx, ring_width, fraction) => {
 
-const draw_circle = (ctx) => {
-    
     const center = [
         Math.random() * w,
-        Math.random() * h
+        fraction * h
     ]
 
-    const [r,g,b,a] = ctx.getImageData(...center, 1, 1).data
-    if (!(r === 26 && g === 26 && b === 26 && a === 255)) {
-        return
-    }
-    
+    const [r, g, b, a] = ctx.getImageData(...center, 1, 1).data
+    // if (!(r === 26 && g === 26 && b === 26 && a === 255)) {
+    //     return
+    // }
 
-    let rad = 70 + Math.random() * 70
+
+    let rad = (100 + Math.random() * 100) * (0.3 + fraction * 0.7)
+
+    const r_w = ring_width / 2 + fraction * ring_width / 2
 
     while (rad > 0) {
         ctx.beginPath()
@@ -84,29 +84,35 @@ const draw_circle = (ctx) => {
         )
         ctx.stroke()
         ctx.fill()
-        rad -= ring_width
+        rad -= r_w
     }
 }
 
 ////////////////////////////////////////////////////////
 const draw = (canvas) => {
 
+    const ring_width = 15 + Math.random() * 10
+
     canvas.width = w
     canvas.height = h
     const ctx = canvas.getContext('2d')
-    ctx.fillStyle = `hsl(0 0% 10%)`
+    ctx.fillStyle = `hsl(60deg 100% 30%)`
     ctx.fillRect(0, 0, w, h)
 
     ctx.lineWidth = 15
 
-    const circ_count = 300
+    const circ_count = 150
 
     for (let x = 0; x < circ_count; x++) {
         const ratio = x / (circ_count / 100) // % btw 0 and circ_count
         const l = 30 + ratio * 0.7
-        ctx.fillStyle = `hsl(0 0% ${l}%)`
-        ctx.strokeStyle = `hsl(0 ${l}% 50%)`
-        draw_circle(ctx)
+        ctx.fillStyle = `hsl(0 0% 0%)`
+        ctx.strokeStyle = `hsl(0 50% 50%)`
+        draw_circle(
+            ctx,
+            ring_width,
+            (x / circ_count)
+        )
     }
 }
 
